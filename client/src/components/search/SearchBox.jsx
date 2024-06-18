@@ -18,7 +18,12 @@ const SearchBox = ({
   isLoading,
 }) => {
   return (
-    <Box display="flex" alignItems="center">
+    <Box
+      display="flex"
+      alignItems="center"
+      flexDir={{ base: "column", md: "row", lg: "row" }}
+      gap={2}
+    >
       <Select
         value={searchCategory}
         onChange={(e) => setSearchCategory(e.target.value)}
