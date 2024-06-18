@@ -1,0 +1,20 @@
+export const playerData = {
+    fullName: "John Doe",
+    dateOfBirth: "11 june 2021",
+    age: 25,
+    gender: "Male",
+    phone: "+1234567890",
+    avatar: "https://via.placeholder.com",
+    preferredWing: "LW",
+    selfRating: {
+        striker: 70,
+        winger: 60,
+        midfielder: 50,
+        wingDefender: 40,
+        centralBack: 55,
+    },
+    value: 500000,
+    zGold: 3000,
+    diamond: 5,
+    matches: 50,
+};
