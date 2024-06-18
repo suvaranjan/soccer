@@ -38,7 +38,11 @@ function SearchComp() {
         res = await getAllTeams(loginUser.token, currentPage, 3);
       }
       console.log(res.data);
-      setResults(res.data[searchCategory.toLowerCase() + "s"]);
+      if (searchCategory === "Player") {
+        setResults(res.data.players);
+      } else if (searchCategory === "Team") {
+        setResults(res.data.teams);
+      }
       setPagination(res.data);
     } catch (error) {
       console.error(error);
@@ -62,7 +66,11 @@ function SearchComp() {
       } else if (searchCategory === "Team") {
         res = await getTeamsBySearch(loginUser.token, currentPage, 3, keyword);
       }
-      setResults(res.data[searchCategory.toLowerCase() + "s"]);
+      if (searchCategory === "Player") {
+        setResults(res.data.players);
+      } else if (searchCategory === "Team") {
+        setResults(res.data.teams);
+      }
       setPagination(res.data);
     } catch (error) {
       console.error(error);

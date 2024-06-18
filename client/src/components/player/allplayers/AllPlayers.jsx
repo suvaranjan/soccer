@@ -52,7 +52,7 @@ function AllPlayers() {
   };
 
   const handleNextPage = () => {
-    if (pagination && currentPage < pagination.totalPages) {
+    if (pagination && pagination.next) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -67,7 +67,6 @@ function AllPlayers() {
         3,
         keyword
       );
-      console.log(res.data);
       setPlayers(res.data.players);
       setPagination(res.data);
     } catch (error) {
@@ -144,7 +143,7 @@ function AllPlayers() {
                 fontWeight="400"
                 variant="outline"
                 onClick={handlePrevPage}
-                isDisabled={!pagination || currentPage === 1}
+                isDisabled={!pagination || !pagination.previous}
                 borderRadius="md"
               >
                 Prev
@@ -154,9 +153,7 @@ function AllPlayers() {
                 fontWeight="400"
                 color="#000"
                 onClick={handleNextPage}
-                isDisabled={
-                  !pagination || currentPage === pagination.totalPages
-                }
+                isDisabled={!pagination || !pagination.next}
                 borderRadius="md"
               >
                 Next

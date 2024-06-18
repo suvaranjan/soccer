@@ -326,21 +326,10 @@ const getAllPlayers = async (req, res) => {
 
     try {
         // Count total documents in the collection
-        const totalPlayers = await Player.countDocuments();
-
-        // Calculate total pages based on total documents and limit per page
-        const totalPages = Math.ceil(totalPlayers / limit);
-
-        // Validate current page
-        let currentPage = page;
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        } else if (currentPage < 1) {
-            currentPage = 1;
-        }
+        const totalCount = await Player.countDocuments();
 
         // Calculate skip value
-        const skip = (currentPage - 1) * limit;
+        const skip = (page - 1) * limit;
 
         // Fetch players with pagination and selected fields
         const players = await Player.find({})
@@ -360,10 +349,24 @@ const getAllPlayers = async (req, res) => {
         // Construct response object
         const response = {
             players,
-            currentPage,
-            totalPages,
-            totalPlayers
+            totalCount,
         };
+
+        // Check if there is a next page
+        if (skip + limit < totalCount) {
+            response.next = {
+                page: page + 1,
+                limit: limit,
+            };
+        }
+
+        // Check if there is a previous page
+        if (skip > 0) {
+            response.previous = {
+                page: page - 1,
+                limit: limit,
+            };
+        }
 
         res.status(200).json(response);
     } catch (error) {
@@ -382,25 +385,14 @@ const getPlayersBySearch = async (req, res) => {
         const regex = new RegExp(keyword, 'i');
 
         // Count total documents matching the search criteria
-        const totalPlayers = await Player.countDocuments({ fullName: regex });
-
-        // Calculate total pages based on total documents and limit per page
-        const totalPages = Math.ceil(totalPlayers / limit);
-
-        // Validate current page
-        let currentPage = page;
-        if (currentPage > totalPages && totalPages > 0) {
-            currentPage = totalPages;
-        } else if (currentPage < 1) {
-            currentPage = 1;
-        }
+        const totalCount = await Player.countDocuments({ fullName: regex });
 
         // Calculate skip value
-        const skip = (currentPage - 1) * limit;
+        const skip = (page - 1) * limit;
 
         // Fetch players matching the search criteria with pagination and selected fields
         let players = [];
-        if (totalPlayers > 0) {
+        if (totalCount > 0) {
             players = await Player.find({ fullName: regex })
                 .skip(skip)
                 .limit(limit)
@@ -419,10 +411,24 @@ const getPlayersBySearch = async (req, res) => {
         // Construct response object
         const response = {
             players,
-            currentPage,
-            totalPages,
-            totalPlayers
+            totalCount,
         };
+
+        // Check if there is a next page
+        if (skip + limit < totalCount) {
+            response.next = {
+                page: page + 1,
+                limit: limit,
+            };
+        }
+
+        // Check if there is a previous page
+        if (skip > 0) {
+            response.previous = {
+                page: page - 1,
+                limit: limit,
+            };
+        }
 
         res.status(200).json(response);
     } catch (error) {
