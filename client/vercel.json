@@ -1,0 +1,81 @@
+{
+    "routes": [
+      {
+        "src": "/register",
+        "dest": "/register"
+      },
+      {
+        "src": "/login",
+        "dest": "/login"
+      },
+      {
+        "src": "/choose",
+        "dest": "/choose"
+      },
+      {
+        "src": "/dashboard",
+        "dest": "/"
+      },
+      {
+        "src": "/create-team",
+        "dest": "/"
+      },
+      {
+        "src": "/add-player",
+        "dest": "/"
+      },
+      {
+        "src": "/setting",
+        "dest": "/"
+      },
+      {
+        "src": "/my-teams",
+        "dest": "/"
+      },
+      {
+        "src": "/my-players",
+        "dest": "/"
+      },
+      {
+        "src": "/team/:teamId",
+        "dest": "/"
+      },
+      {
+        "src": "/notifications",
+        "dest": "/"
+      },
+      {
+        "src": "/profile",
+        "dest": "/"
+      },
+      {
+        "src": "/search",
+        "dest": "/"
+      },
+      {
+        "src": "/add-funds",
+        "dest": "/"
+      },
+      {
+        "src": "/player/:playerId",
+        "dest": "/"
+      },
+      {
+        "src": "/team/invitations",
+        "dest": "/"
+      },
+      {
+        "src": "/team/player-join-requests",
+        "dest": "/"
+      },
+      {
+        "src": "/all-teams",
+        "dest": "/"
+      },
+      {
+        "src": "/all-players",
+        "dest": "/"
+      }
+    ]
+  }
+  
