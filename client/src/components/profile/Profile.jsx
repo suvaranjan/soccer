@@ -59,7 +59,7 @@ function Profile() {
       <Header heading="Profile" />
 
       <Box
-        w="70vw"
+        w="90vw"
         minH="100vh"
         margin="1rem auto"
         background="linear-gradient(90deg, rgba(255,50,37,1) 0%, rgba(46,149,171,1) 65%, rgba(14,233,246,1) 100%)"
