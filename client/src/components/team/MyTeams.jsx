@@ -120,7 +120,7 @@ function MyTeams() {
                     <Link>
                       STATISTICS <ExternalLinkIcon />
                     </Link>
-                    <Link href={`/team/${selectedTeam._id}`}>
+                    <Link onClick={() => navigate(`/team/${selectedTeam._id}`)}>
                       VIEW & EDIT TEAM <ExternalLinkIcon />
                     </Link>
                     <Link>

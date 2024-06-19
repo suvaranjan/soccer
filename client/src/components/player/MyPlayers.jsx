@@ -119,7 +119,9 @@ function MyPlayers() {
                     <Link>
                       STATISTICS <ExternalLinkIcon />
                     </Link>
-                    <Link href={`/player/${selectedPlayer._id}`}>
+                    <Link
+                      onClick={() => navigate(`/player/${selectedPlayer._id}`)}
+                    >
                       VIEW & EDIT PLAYER <ExternalLinkIcon />
                     </Link>
                     <Link>
