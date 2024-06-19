@@ -38,7 +38,7 @@
       },
       {
         "src": "/team/:teamId",
-        "dest": "/"
+        "dest": "/team"
       },
       {
         "src": "/notifications",
