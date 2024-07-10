@@ -4,18 +4,23 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import { Box, Image, Text, Button, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, Button, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { getAllMatches } from "../../api/api";
 import useLoginUser from "../../hooks/useLoginUser";
+import useStore from "../../zustand/store"; // Adjust the path if needed
 
 const NewsCard = () => {
   const { loginUser } = useLoginUser();
-  const [matches, setMatches] = useState([]);
+  const { matches, setMatches } = useStore();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchMatches();
+    if (matches.length === 0) {
+      fetchMatches();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
   const fetchMatches = async () => {

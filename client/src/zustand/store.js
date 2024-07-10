@@ -17,6 +17,9 @@ const useStore = create((set) => ({
     notificationCount: 0,
     setNotificationCount: (num) => set({ notificationCount: num }),
     decrementNotificationCount: () => set((state) => ({ notificationCount: state.notificationCount - 1 })),
+    matches: [],
+    setMatches: (matches) => set({ matches }),
+
 }));
 
 export default useStore;
