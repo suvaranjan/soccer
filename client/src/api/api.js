@@ -1,5 +1,6 @@
 import axios from 'axios'
-export const baseUrl = "http://localhost:3000/api";
+export const baseUrl = "https://soccer-x3f3.onrender.com/api";
+// export const baseUrl = "http://localhost:3000/api";
 
 
 const getHeader = (token) => {
