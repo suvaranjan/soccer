@@ -645,3 +645,12 @@ export async function setAsDefaultTeam(token, teamId) {
 
     return response;
 };
+
+export async function uploadTeamGalleryPhoto(token, teamId, photoUrl) {
+
+    const response = await axios.post(`${baseUrl}/team/add-photo-to-gallery`, { teamId, photoUrl }, {
+        headers: getHeader(token),
+    });
+
+    return response;
+};
