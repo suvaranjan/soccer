@@ -15,6 +15,7 @@ router.post('/join-requests-accept', authMiddleware, teamController.TeamJoinRequ
 router.post('/join-requests-reject', authMiddleware, teamController.TeamJoinRequestReject);
 router.get('/player-join-requests', authMiddleware, teamController.getTeamJoinRequests);
 router.post('/check-team-contract', authMiddleware, teamController.checkPlayerContract);
+router.post('/add-photo-to-gallery', authMiddleware, teamController.uploadTeamPhoto);
 
 router.get('/get-team/:teamId', authMiddleware, teamController.getTeam);
 

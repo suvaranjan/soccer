@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Box, Center, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  Input,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import Header from "../../header/Header";
 import BasicInfo from "./BasicInfo";
 import TeamValue from "./TeamValue";
@@ -9,7 +17,16 @@ import BasicInfoForm from "./form/BasicInfoForm";
 import InvitePlayers from "./InvitePlayers";
 import AddMyPlayers from "./AddMyPlayers";
 import useLoginUser from "../../../hooks/useLoginUser";
-import { addPlayerToTeam, checkManagerTeam, getTeam } from "../../../api/api";
+import {
+  addPlayerToTeam,
+  checkManagerTeam,
+  getTeam,
+  uploadTeamGalleryPhoto,
+} from "../../../api/api";
+import { ArrowUpIcon } from "@chakra-ui/icons";
+import PhotoCard from "./PhotoCard";
+import { imageUpload } from "../../../helper/imageUpload";
+import toast from "react-hot-toast";
 
 export default function TeamPage() {
   const { loginUser } = useLoginUser();
@@ -23,6 +40,7 @@ export default function TeamPage() {
   const [isLoginUserManagerOfTeam, setIsLoginUserManagerOfTeam] =
     useState(false);
   const navigate = useNavigate();
+  const [uploading, setUploading] = useState(false);
 
   const { teamId } = useParams();
 
@@ -104,14 +122,53 @@ export default function TeamPage() {
     console.log("Removing Player", playerId);
   };
 
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    try {
+      await imageUpload(file, handlePhotoUpload, setUploading);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePhotoUpload = async (galleryPhoto) => {
+    if (galleryPhoto === "") return;
+
+    try {
+      const res = uploadTeamGalleryPhoto(
+        loginUser.token,
+        team._id,
+        galleryPhoto
+      );
+
+      toast.promise(res, {
+        loading: "Saving photo...",
+        success: () => {
+          setTeam((prevTeam) => ({
+            ...prevTeam,
+            photos: [...prevTeam.photos, galleryPhoto],
+          }));
+          return "Photo Saved";
+        },
+        error: (error) => {
+          return error?.response?.data?.msg || "Error saving photo";
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const canUploadPhoto = () => {
+    return (
+      (loginUser.role === "team-manager" &&
+        team.managers.includes(loginUser.managerId)) ||
+      (loginUser.role === "player" && team.players.includes(loginUser.playerId))
+    );
+  };
+
   return (
-    <Box
-      // backgroundImage="url('https://images.unsplash.com/photo-1487466365202-1afdb86c764e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvb3RiYWxsJTIwc3RhZGl1bXxlbnwwfHwwfHx8MA%3D%3D')"
-      // backgroundSize="cover"
-      // backgroundPosition="center"
-      minH="100vh"
-      color="#FAFAFA"
-    >
+    <Box minH="100vh" color="#FAFAFA">
       <Header heading="MY TEAM" />
       {!loadingTeam && team && (
         <Box
@@ -129,14 +186,14 @@ export default function TeamPage() {
             {!isBasicInfoEditing && (
               <BasicInfo
                 team={team}
-                toogle={toggleBasicInfoEdit}
+                toggle={toggleBasicInfoEdit}
                 showToggle={isLoginUserManagerOfTeam}
               />
             )}
             {isBasicInfoEditing && (
               <BasicInfoForm
                 initialValues={team}
-                toogleFunc={toggleBasicInfoEdit}
+                toggleFunc={toggleBasicInfoEdit}
                 setTeam={setTeam}
               />
             )}
@@ -185,6 +242,58 @@ export default function TeamPage() {
           justifyContent="center"
         >
           <Spinner size="xl" />
+        </Box>
+      )}
+      {!loadingTeam && team && (
+        <Box px="1rem">
+          <Box
+            bgGradient="linear-gradient(to right, #005aa7, #fffde4)"
+            borderRadius="md"
+          >
+            <Box
+              bg="rgba(255, 255, 255, 0.2)"
+              p={3}
+              borderRadius="md"
+              display="flex"
+              gap={3}
+              alignItems="center"
+            >
+              <Text fontSize="1.2rem" fontWeight="700">
+                Team Gallery
+              </Text>
+              {canUploadPhoto() && (
+                <Button as="label" leftIcon={<ArrowUpIcon />} size="sm">
+                  Upload Photo
+                  <Input
+                    id="photo-upload"
+                    type="file"
+                    onChange={handleFileChange}
+                    display="none"
+                  />
+                </Button>
+              )}
+            </Box>
+
+            <Box mt={4} p={2} minH="200px">
+              {team.photos.length > 0 && (
+                <Grid
+                  templateColumns="repeat(auto-fill, minmax(150px, 1fr))"
+                  gap={4}
+                >
+                  {team.photos.map((photo, index) => (
+                    <GridItem key={index}>
+                      <PhotoCard photo={photo} />
+                    </GridItem>
+                  ))}
+                </Grid>
+              )}
+              {team.photos.length === 0 && (
+                <Text fontSize="1rem" mb=".5rem" ml={2}>
+                  No photos available
+                </Text>
+              )}
+            </Box>
+          </Box>
         </Box>
       )}
     </Box>

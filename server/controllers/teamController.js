@@ -156,7 +156,7 @@ const getTeam = async (req, res) => {
                     match: { userName: { $exists: true } } // Only populate if userName exists
                 }
             })
-            .select('name avatar description formation captains bankInfo sponsor zGold diamond wins managers');
+            .select('name avatar description formation captains bankInfo sponsor zGold diamond wins managers photos');
 
         if (!team) {
             return res.status(404).json({ msg: "Team not found" });
@@ -763,6 +763,29 @@ const checkPlayerContract = async (req, res) => {
     }
 };
 
+const uploadTeamPhoto = async (req, res) => {
+    const { photoUrl, teamId } = req.body;
+
+    try {
+        // Check if the team exists
+        const team = await Team.findById(teamId);
+        if (!team) {
+            return res.status(404).json({ msg: 'Team not found' });
+        }
+
+        // Add the photo URL to the team's photos array
+        team.photos.push(photoUrl);
+
+        // Save the team document
+        await team.save();
+
+        res.status(200).json({ msg: 'Photo added successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
 module.exports = {
-    createTeam, addPlayerToTeam, getTeam, updateTeamInfo, removePlayerFromTeam, sendTeamInvitation, getAllTeams, getTeamsBySearch, checkTeamBelongsToManager, getTeamJoinRequests, TeamJoinRequestAccept, TeamJoinRequestReject, makeCaptain, makeViceCaptain, checkPlayerContract
+    createTeam, addPlayerToTeam, getTeam, updateTeamInfo, removePlayerFromTeam, sendTeamInvitation, getAllTeams, getTeamsBySearch, checkTeamBelongsToManager, getTeamJoinRequests, TeamJoinRequestAccept, TeamJoinRequestReject, makeCaptain, makeViceCaptain, checkPlayerContract, uploadTeamPhoto
 };
