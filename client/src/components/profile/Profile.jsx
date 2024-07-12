@@ -36,7 +36,7 @@ function Profile() {
     }
     setLoading(true);
     try {
-      const res = await fetchProfile(loginUser.token);
+      const res = await fetchProfile(loginUser.token, loginUser.userId);
       setProfileData(res.data);
     } catch (error) {
       if (error?.response?.data?.error === "token-error") {
