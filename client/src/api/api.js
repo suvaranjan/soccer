@@ -19,27 +19,27 @@ export async function getUserHeader(token) {
     return response;
 };
 
-export async function getPlayerProfile(token) {
+export async function getPlayerProfile(token, userId) {
 
-    const response = await axios.get(`${baseUrl}/player/profile`, {
+    const response = await axios.get(`${baseUrl}/player/profile/${userId}`, {
         headers: getHeader(token),
     });
 
     return response;
 };
 
-export async function getManagerProfile(token) {
+export async function getManagerProfile(token, userId) {
 
-    const response = await axios.get(`${baseUrl}/manager/profile`, {
+    const response = await axios.get(`${baseUrl}/manager/profile/${userId}`, {
         headers: getHeader(token),
     });
 
     return response;
 };
 
-export async function getRefereeProfile(token) {
+export async function getRefereeProfile(token, userId) {
 
-    const response = await axios.get(`${baseUrl}/referee/profile`, {
+    const response = await axios.get(`${baseUrl}/referee/profile/${userId}`, {
         headers: getHeader(token),
     });
 

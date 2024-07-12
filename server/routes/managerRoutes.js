@@ -3,7 +3,7 @@ const router = express.Router();
 const managerController = require("../controllers/ManagerController");
 const authMiddleware = require(".././middleware/middleware")
 
-router.get('/profile', authMiddleware, managerController.getManagerProfile);
+router.get('/profile/:id', authMiddleware, managerController.getManagerProfile);
 router.put('/basic-info-update', authMiddleware, managerController.managerBasicInfoUpdate);
 router.post('/add-player', authMiddleware, managerController.addPlayer);
 router.get('/get-players', authMiddleware, managerController.getMyPlayers);

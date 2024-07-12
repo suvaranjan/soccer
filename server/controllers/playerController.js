@@ -6,8 +6,7 @@ const { createNotification } = require("../controllers/notificationController")
 
 const getPlayerProfile = async (req, res) => {
     try {
-        const userId = req.user._id;
-        // const userId = req.body.userId;
+        const userId = req.params.id;
 
         // Find the user
         const user = await User.findById(userId);

@@ -4,7 +4,7 @@ const playerController = require('../controllers/playerController');
 const authMiddleware = require(".././middleware/middleware")
 
 
-router.get('/profile', authMiddleware, playerController.getPlayerProfile);
+router.get('/profile/:id', authMiddleware, playerController.getPlayerProfile);
 router.put('/basic-info-update', authMiddleware, playerController.playerBasicInfoUpdate);
 router.put('/update-strength', authMiddleware, playerController.playerStrengthUpdate);
 router.post('/check-player-team', authMiddleware, playerController.isPlayerInATeam);

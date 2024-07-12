@@ -142,6 +142,10 @@ export const router = createBrowserRouter([
         path: "/create-league",
         element: <LeagueForm />,
       },
+      {
+        path: "/referee/profile/:refId",
+        element: <RefereePage />,
+      },
     ],
   },
 ]);
