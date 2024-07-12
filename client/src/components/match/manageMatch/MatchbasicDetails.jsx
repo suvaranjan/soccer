@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text, Avatar, Image } from "@chakra-ui/react";
 import { formatMatchDate } from "../../../helper/formatDate";
+import { useNavigate } from "react-router-dom";
 
 const MatchBasicDetails = ({ matchDetails }) => {
   return (
@@ -163,6 +164,7 @@ const MatchBasicDetails = ({ matchDetails }) => {
 export default MatchBasicDetails;
 
 const RefereeCard = ({ referee }) => {
+  const navigate = useNavigate();
   return (
     <Box
       display="flex"
@@ -172,6 +174,7 @@ const RefereeCard = ({ referee }) => {
       borderRadius="md"
       boxShadow="lg"
       backdropFilter="blur(10px)"
+      onClick={() => navigate(`/referee/profile/${referee.user._id}`)}
     >
       <Avatar src={referee.avatar} size="md" mr={4} />
       <Box>
