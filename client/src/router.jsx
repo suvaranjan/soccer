@@ -27,6 +27,7 @@ import AllMatches from "./components/match/allMatches/AllMatches";
 import Fields from "./components/fields/Fields";
 import Reminder from "./components/reminder/Reminder";
 import LeagueForm from "./components/league/createLeague/LeagueForm";
+import RefereePage from "./components/referee/RefereePage";
 
 export const router = createBrowserRouter([
   {
