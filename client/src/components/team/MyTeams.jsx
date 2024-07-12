@@ -22,7 +22,6 @@ import toast from "react-hot-toast";
 
 function MyTeams() {
   const { loginUser } = useLoginUser();
-  const [selectedTeam, setSelectedTeam] = useState({});
   const [fetchingTeams, setFetchingTeams] = useState(true);
   const [myTeams, setMyTeams] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -44,10 +43,6 @@ function MyTeams() {
     } finally {
       setFetchingTeams(false);
     }
-  };
-
-  const handleSelectTeam = (team) => {
-    setSelectedTeam(team);
   };
 
   const handleSearch = (e) => {
@@ -129,7 +124,6 @@ function MyTeams() {
                 <TeamCard
                   key={team._id}
                   team={team}
-                  handleSelectTeam={handleSelectTeam}
                   defaultTeamId={defaultTeamId}
                   makeDefaultTeam={makeDefaultTeam}
                 />
@@ -175,7 +169,7 @@ function MyTeams() {
 
 export default MyTeams;
 
-function TeamCard({ team, handleSelectTeam, defaultTeamId, makeDefaultTeam }) {
+function TeamCard({ team, defaultTeamId, makeDefaultTeam }) {
   const navigate = useNavigate();
 
   return (
@@ -190,7 +184,9 @@ function TeamCard({ team, handleSelectTeam, defaultTeamId, makeDefaultTeam }) {
       cursor="pointer"
       display="flex"
       flexDir="column"
-      onClick={() => handleSelectTeam(team)}
+      onClick={(e) => {
+        navigate(`/team/${team._id}`);
+      }}
     >
       <Box
         flex={3}
