@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { getAllMatches } from "../../api/api";
 import useLoginUser from "../../hooks/useLoginUser";
 import useStore from "../../zustand/store";
-import { useNavigate } from "react-router-dom";
 
 const NewsCard = () => {
   const { loginUser } = useLoginUser();
