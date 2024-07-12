@@ -29,6 +29,10 @@ const NewsCard = () => {
       const res = await getAllMatches(loginUser.token, 1, 3);
       setMatches(res.data.matches);
     } catch (error) {
+      if (error?.response?.data?.error === "token-error") {
+        localStorage.removeItem("loginUser");
+        navigate("/login");
+      }
       console.log("Error fetching matches:", error);
     } finally {
       setIsLoading(false);
