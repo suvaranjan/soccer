@@ -8,10 +8,12 @@ import { Box, Spinner, Button, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { getAllMatches } from "../../api/api";
 import useLoginUser from "../../hooks/useLoginUser";
-import useStore from "../../zustand/store"; // Adjust the path if needed
+import useStore from "../../zustand/store";
+import { useNavigate } from "react-router-dom";
 
 const NewsCard = () => {
   const { loginUser } = useLoginUser();
+  const navigate = useNavigate();
   const { matches, setMatches } = useStore();
   const [isLoading, setIsLoading] = useState(true);
 
