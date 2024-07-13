@@ -1,6 +1,6 @@
 import axios from 'axios'
-// export const baseUrl = import.meta.env.VITE_API_URL;
-export const baseUrl = "https://soccer-x3f3.onrender.com/api"
+export const baseUrl = import.meta.env.VITE_API_URL;
+// export const baseUrl = "https://soccer-x3f3.onrender.com/api"
 
 const getHeader = (token) => {
     return {
