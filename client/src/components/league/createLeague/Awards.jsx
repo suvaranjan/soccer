@@ -1,5 +1,5 @@
 import { Box, Code, Image, Text, Divider, Heading } from "@chakra-ui/react";
-import TrophyImage from "../../../Images/league/Trophy.png";
+import TrophyImage from "../../../Images/Trophy.png";
 
 export default function Awards() {
   return (

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+// const imageUploadUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
+const imageUploadUrl = "https://api.cloudinary.com/v1_1/suvaranjan/image/upload"
 
 export const imageUpload = async (file, setImage, setUpload) => {
     if (!file) {
@@ -24,7 +26,7 @@ export const imageUpload = async (file, setImage, setUpload) => {
         data.append("cloud_name", "suvaranjan");
 
         const res = axios.post(
-            "https://api.cloudinary.com/v1_1/suvaranjan/image/upload",
+            imageUploadUrl,
             data
         );
 
