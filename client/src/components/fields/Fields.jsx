@@ -172,6 +172,16 @@ function Fields() {
                   <SkeletonFieldCard />
                 </>
               )}
+              {!isLoading && fields.length === 0 && (
+                <Box
+                  minH="60vh"
+                  color="#FAFAFA"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                >
+                  No Fields Found
+                </Box>
+              )}
             </SimpleGrid>
           </Box>
         )}

@@ -164,6 +164,16 @@ function SearchComp() {
                     isLoginUserPlayer={loginUser.role === "player"}
                   />
                 ))}
+              {results.length === 0 && (
+                <Box
+                  minH="60vh"
+                  color="#FAFAFA"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                >
+                  No Teams Found
+                </Box>
+              )}
             </SimpleGrid>
           ) : (
             <Flex direction="column" align="center" gap="1rem">
@@ -171,6 +181,16 @@ function SearchComp() {
                 results.map((item) => (
                   <PlayerCard key={item._id} player={item} />
                 ))}
+              {results.length === 0 && (
+                <Box
+                  minH="60vh"
+                  color="#FAFAFA"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                >
+                  No Players Found
+                </Box>
+              )}
             </Flex>
           )}
 

@@ -49,6 +49,12 @@ function Dashboard() {
         navigate("/login");
       }
 
+      if (error?.response?.data?.msg === "User not found") {
+        toast.error("User not found");
+        localStorage.removeItem("loginUser");
+        navigate("/login");
+      }
+
       console.log(error);
     } finally {
       setLoading(false);

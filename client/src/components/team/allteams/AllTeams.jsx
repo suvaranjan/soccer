@@ -179,6 +179,16 @@ function AllTeams() {
                   <SkeletonTeamCard />
                 </>
               )}
+              {!isLoading && teams.length === 0 && (
+                <Box
+                  minH="60vh"
+                  color="#FAFAFA"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                >
+                  No Teams Found
+                </Box>
+              )}
             </SimpleGrid>
             <Box display="flex" justifyContent="space-between" mt="2rem">
               <Button

@@ -14,7 +14,7 @@ const NewsCard = () => {
   const { loginUser } = useLoginUser();
   const navigate = useNavigate();
   const { matches, setMatches } = useStore();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (matches.length === 0) {
@@ -31,6 +31,12 @@ const NewsCard = () => {
       setMatches(res.data.matches);
     } catch (error) {
       if (error?.response?.data?.error === "token-error") {
+        localStorage.removeItem("loginUser");
+        navigate("/login");
+      }
+
+      if (error?.response?.data?.msg === "User not found") {
+        toast.error("User not found");
         localStorage.removeItem("loginUser");
         navigate("/login");
       }
@@ -58,11 +64,30 @@ const NewsCard = () => {
           modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
         >
-          {matches.map((match) => (
-            <SwiperSlide key={match._id}>
-              <MatchCard match={match} />
+          {matches.length > 0 ? (
+            matches.map((match) => (
+              <SwiperSlide key={match._id}>
+                <MatchCard match={match} />
+              </SwiperSlide>
+            ))
+          ) : (
+            <SwiperSlide>
+              <Box
+                width="344px"
+                height="200px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                borderRadius="md"
+                boxShadow="md"
+                bg="gray.200"
+              >
+                <Text fontSize="lg" color="gray.500">
+                  No matches found
+                </Text>
+              </Box>
             </SwiperSlide>
-          ))}
+          )}
         </Swiper>
       )}
     </Box>

@@ -27,6 +27,7 @@ const getRefereeProfile = async (req, res) => {
         responseData.occupation = referee.occupation;
         responseData.zGold = referee.zGold;
         responseData.diamond = referee.diamond;
+        responseData.fee = referee.fee;
 
         res.status(200).json(responseData);
     } catch (error) {
@@ -48,7 +49,7 @@ const refereeBasicInfoUpdate = async (req, res) => {
         const referee = await Referee.findOne({ user: userId })
 
         if (!referee) {
-            return res.status(404).json({ msg: 'Team Manager not found' });
+            return res.status(404).json({ msg: 'Referee not found' });
         }
 
         referee.fullName = fullName;
@@ -58,6 +59,33 @@ const refereeBasicInfoUpdate = async (req, res) => {
         referee.phone = phone;
         referee.occupation = occupation;
         referee.address = address;
+
+        // Save the updated user (unchanged)
+        await referee.save();
+
+        res.json({ msg: 'Refereer Profile updated successfully' });
+    } catch (error) {
+        console.log('Error updating profile:', error);
+        res.status(500).json({ msg: 'Internal server error' });
+    }
+};
+
+const refereeFeeUpdate = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { fee } = req.body;
+
+        if (!fee) {
+            return res.status(404).json({ msg: 'All fields are required' });
+        }
+
+        const referee = await Referee.findOne({ user: userId })
+
+        if (!referee) {
+            return res.status(404).json({ msg: 'Referee not found' });
+        }
+
+        referee.fee = fee;
 
         // Save the updated user (unchanged)
         await referee.save();
@@ -87,5 +115,5 @@ const getAllReferees = async (req, res) => {
 };
 
 module.exports = {
-    getRefereeProfile, refereeBasicInfoUpdate, getAllReferees
+    getRefereeProfile, refereeBasicInfoUpdate, getAllReferees, refereeFeeUpdate
 };

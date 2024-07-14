@@ -175,6 +175,44 @@ export function BasicInfo({ playerData, toggleBasicInfo }) {
   );
 }
 
+export function RefFee({ playerData, toggleRefFee }) {
+  return (
+    <Box
+      bg="rgba(255, 255, 255, 0.2)"
+      p="1rem"
+      borderRadius="md"
+      fontSize="1rem"
+      mb=".5rem"
+      position="relative"
+    >
+      <Text fontSize="1.2rem" fontWeight="bold" mb={2}>
+        Referee Fee
+      </Text>
+      <Text fontWeight="600">
+        Fee:{" "}
+        <Text as="span" fontWeight="normal">
+          {playerData.fee}
+        </Text>
+      </Text>
+      <Box
+        position="absolute"
+        top="15px"
+        right="25px"
+        zIndex="1"
+        cursor="pointer"
+        bg="rgba(255, 255, 255, 0.6)"
+        color="#000"
+        p="5px 10px"
+        borderRadius="md"
+        fontSize="1rem"
+        onClick={toggleRefFee}
+      >
+        <i className="fa-solid fa-pen-to-square"></i>
+      </Box>
+    </Box>
+  );
+}
+
 export function PlayerStrength({ playerData, togglePlayerStrength }) {
   return (
     <Box

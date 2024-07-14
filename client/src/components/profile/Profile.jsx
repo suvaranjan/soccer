@@ -51,15 +51,7 @@ function Profile() {
   };
 
   return (
-    <Box
-      // backgroundImage="url('https://images.unsplash.com/photo-1487466365202-1afdb86c764e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvb3RiYWxsJTIwc3RhZGl1bXxlbnwwfHwwfHx8MA%3D%3D')"
-      // backgroundSize="cover"
-      // backgroundPosition="center"
-      minH="100vh"
-      display="flex"
-      flexDirection="column"
-      color="#FAFAFA"
-    >
+    <Box minH="100vh" display="flex" flexDirection="column" color="#FAFAFA">
       <Header heading="Profile" />
 
       <Box

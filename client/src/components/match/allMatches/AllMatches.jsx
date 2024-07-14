@@ -197,6 +197,18 @@ function AllMatches() {
                     ))}
                 </SimpleGrid>
               )}
+
+              {!isLoading && matches.length === 0 && (
+                <Box
+                  minH="50vh"
+                  color="#FAFAFA"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                >
+                  No Matches Found
+                </Box>
+              )}
+
               <Box display="flex" justifyContent="space-between" mt="2rem">
                 <Button
                   colorScheme="purple"

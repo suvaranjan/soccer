@@ -5,11 +5,13 @@ import {
   PlayerStrength,
   BasicInfo,
   Logout,
+  RefFee,
 } from "./ProfileComponents";
 import {
   BasicInfoForm,
   FirstCardForm,
   PlayerStrengthForm,
+  RefFeeForm,
 } from "./ProfileForms";
 import useLoginUser from "../../hooks/useLoginUser";
 
@@ -17,6 +19,7 @@ function RenderProfile({ profileData, role }) {
   const [updateFirstCard, setUpdateFirstCard] = useState(false);
   const [updatePlayerStrength, setUpdatePlayerStrength] = useState(false);
   const [updateBasicInfo, setUpdateBasicInfo] = useState(false);
+  const [updateRefFee, setUpdateRefFee] = useState(false);
   const { logoutUser } = useLoginUser();
 
   const togglePlayerStrength = () => {
@@ -25,6 +28,10 @@ function RenderProfile({ profileData, role }) {
 
   const toggleBasicInfo = () => {
     setUpdateBasicInfo(!updateBasicInfo);
+  };
+
+  const toggleRefFee = () => {
+    setUpdateRefFee(!updateRefFee);
   };
 
   const toggleFirstCard = () => {
@@ -56,6 +63,14 @@ function RenderProfile({ profileData, role }) {
           playerData={profileData}
           togglePlayerStrength={togglePlayerStrength}
         />
+      )}
+
+      {role === "referee" && !updateRefFee && (
+        <RefFee playerData={profileData} toggleRefFee={toggleRefFee} />
+      )}
+
+      {role === "referee" && updateRefFee && (
+        <RefFeeForm data={profileData} toggleRefFee={toggleRefFee} />
       )}
       <Logout logoutUser={logoutUser} />
     </>

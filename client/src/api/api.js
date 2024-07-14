@@ -652,3 +652,12 @@ export async function uploadTeamGalleryPhoto(token, teamId, photoUrl) {
 
     return response;
 };
+
+export async function updateRefereeFee(token, data) {
+
+    const response = await axios.put(`${baseUrl}/referee/fee-update`, data, {
+        headers: getHeader(token),
+    });
+
+    return response;
+};

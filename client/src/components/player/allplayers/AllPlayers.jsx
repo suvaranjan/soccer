@@ -131,6 +131,17 @@ function AllPlayers() {
                 players.map((player) => (
                   <PlayerCard key={player._id} player={player} />
                 ))}
+              {!isLoading && players.length === 0 && (
+                <Box
+                  minH="60vh"
+                  textAlign="center"
+                  color="#FAFAFA"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                >
+                  No Players Found
+                </Box>
+              )}
               {isLoading && (
                 <Center minH="300px">
                   <Spinner size="xl" />
