@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const connect = require("../server/db/db");
 const morgan = require("morgan");
@@ -13,6 +14,7 @@ const refereeRoutes = require("./routes/refereeRoutes");
 const matchRoutes = require("./routes/matchRoutes");
 const reminderRoutes = require("./routes/reminderRoutes");
 const reminderScheduler = require('./reminder/myReminder');
+const upload = require('./helper/uploadHelper');
 require('dotenv').config();
 
 const app = express();
@@ -22,10 +24,28 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the soccer app');
+});
+
+app.post('/upload', (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            res.status(400).json({ message: err });
+        } else {
+            if (req.file == undefined) {
+                res.status(400).json({ message: 'No file selected!' });
+            } else {
+                res.status(200).json({
+                    message: 'File uploaded!',
+                    file: `uploads/${req.file.filename}`
+                });
+            }
+        }
+    });
 });
 
 app.use("/api", authRoutes);
