@@ -26,6 +26,7 @@ function MyTeams() {
   const [myTeams, setMyTeams] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [defaultTeamId, setDefaultTeamId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMyTeam();
