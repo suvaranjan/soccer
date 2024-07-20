@@ -25,9 +25,10 @@ function Dashboard() {
   useEffect(() => {
     if (!loginUser) {
       navigate("/login");
-    } else {
-      console.log(loginUser.token);
     }
+    // else {
+    //   console.log(loginUser.token);
+    // }
   }, []);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ function Dashboard() {
     setLoading(true);
     try {
       const res = await getUserHeader(loginUser.token);
-      console.log(res.data);
+      // console.log(res.data);
       setHeaderData(res.data);
       setNotificationCount(res.data.unreadNotificationsCount);
     } catch (error) {
@@ -55,7 +56,7 @@ function Dashboard() {
         navigate("/login");
       }
 
-      console.log(error);
+      // console.log(error);
     } finally {
       setLoading(false);
     }

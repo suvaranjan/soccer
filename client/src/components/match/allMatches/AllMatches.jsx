@@ -44,7 +44,7 @@ function AllMatches() {
       } else {
         res = await getAllMatches(loginUser.token, currentPage, 3);
       }
-      console.log(res.data);
+      // console.log(res.data);
 
       setMatches(res.data.matches);
       setPagination(res.data);

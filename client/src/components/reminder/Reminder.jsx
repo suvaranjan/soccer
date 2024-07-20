@@ -104,7 +104,7 @@ function Reminder() {
     try {
       setFetchingReminders(true);
       const res = await getManagerCreatedReminders(loginUser.token);
-      console.log(res.data);
+      // console.log(res.data);
       setReminders(res.data);
     } catch (error) {
       console.log(error);
@@ -117,7 +117,7 @@ function Reminder() {
     try {
       setFetchingReminders(true);
       const res = await getUserReminders(loginUser.token);
-      console.log(res.data);
+      // console.log(res.data);
       setReminders(res.data);
     } catch (error) {
       console.log(error);

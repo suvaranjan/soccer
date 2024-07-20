@@ -64,14 +64,14 @@ export default function TeamPage() {
       setLoadingTeam(true);
       const res = await getTeam(loginUser.token, teamId);
       setTeam(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       if (error?.response?.data?.error === "token-error") {
         localStorage.removeItem("loginUser");
         navigate("/login");
       }
 
-      console.log(error);
+      // console.log(error);
     } finally {
       setLoadingTeam(false);
     }

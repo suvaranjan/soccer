@@ -37,7 +37,7 @@ function SearchComp() {
       } else if (searchCategory === "Team") {
         res = await getAllTeams(loginUser.token, currentPage, 3);
       }
-      console.log(res.data);
+      // console.log(res.data);
       if (searchCategory === "Player") {
         setResults(res.data.players);
       } else if (searchCategory === "Team") {

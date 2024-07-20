@@ -40,7 +40,7 @@ const NewsCard = () => {
         localStorage.removeItem("loginUser");
         navigate("/login");
       }
-      console.log("Error fetching matches:", error);
+      // console.log("Error fetching matches:", error);
     } finally {
       setIsLoading(false);
     }

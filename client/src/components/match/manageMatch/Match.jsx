@@ -30,7 +30,7 @@ function Match() {
       setLoadingMatch(true);
       const res = await getMatch(loginUser.token, matchId);
       setMatch(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log(error);
     } finally {

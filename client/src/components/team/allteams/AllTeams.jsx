@@ -40,7 +40,7 @@ function AllTeams() {
       setIsLoading(true);
 
       const res = await getAllTeams(loginUser.token, currentPage, 3); // Fetch 3 teams per page
-      console.log(res.data.teams);
+      // console.log(res.data.teams);
 
       setTeams(res.data.teams);
       setPagination(res.data);
@@ -50,7 +50,7 @@ function AllTeams() {
         navigate("/login");
       }
 
-      console.log(error);
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +78,7 @@ function AllTeams() {
         3,
         keyword
       );
-      console.log(res.data);
+      // console.log(res.data);
       setTeams(res.data.teams);
       setPagination(res.data);
     } catch (error) {

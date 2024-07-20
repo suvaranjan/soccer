@@ -36,7 +36,7 @@ function CreateMatch() {
       playerNeed: Number(values.playerNeed),
     };
 
-    console.log(updatedValues);
+    // console.log(updatedValues);
 
     try {
       const res = createMatch(loginUser.token, updatedValues);
@@ -60,7 +60,7 @@ function CreateMatch() {
       setFetchingReferees(true);
       const res = await getAllReferees(loginUser.token);
       setMyReferees(res.data);
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -73,7 +73,7 @@ function CreateMatch() {
       setFetchingFields(true);
       const res = await getAllFields(loginUser.token);
       setMyFields(res.data);
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       console.log(error);
     } finally {

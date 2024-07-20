@@ -25,7 +25,7 @@ function Notification() {
     try {
       setisLoading(true);
       const res = await getNotifications(loginUser.token);
-      console.log(notifications);
+      // console.log(notifications);
       setNotifications(res.data);
     } catch (error) {
       console.log(error);
