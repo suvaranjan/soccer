@@ -1,5 +1,6 @@
 import axios from 'axios'
-export const baseUrl = import.meta.env.VITE_API_URL;
+// export const baseUrl = import.meta.env.VITE_API_URL;
+export const baseUrl = "http://149.28.150.230:3000/api";
 
 const getHeader = (token) => {
     return {

@@ -1,7 +1,10 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-const imageUploadUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
-const serverUrl = import.meta.env.VITE_SERVER_URL;
+const imageUploadUrl = "http://149.28.150.230:3000/upload";
+const serverUrl = "http://149.28.150.230:3000";
+
+// const imageUploadUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
+// const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 // export const imageUpload = async (file, setImage, setUpload) => {
 //     if (!file) {
