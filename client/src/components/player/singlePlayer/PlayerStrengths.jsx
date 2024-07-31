@@ -1,6 +1,11 @@
 // PlayerStrengths.jsx
 import React from "react";
 import { Box, Image, Text, Progress } from "@chakra-ui/react";
+import passingImage from "../../../Images/passing.png";
+import shootingImage from "../../../Images/shooting.png";
+import defendImage from "../../../Images/defend.png";
+import catchImage from "../../../Images/catch.png";
+import speedImage from "../../../Images/speed.png";
 
 const PlayerStrengths = ({ player, toggle, showToggle }) => {
   return (
@@ -42,13 +47,13 @@ const PlayerStrengths = ({ player, toggle, showToggle }) => {
       </Box>
       <Box className="childBox" mt="1rem" bg="rgba(255, 255, 255, 0.1)">
         <Box display="flex" alignItems="center" mb="1rem">
-          <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812928/Shooting_afspxs.png" />
-          <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812949/Speed_nht357.png" />
-          <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812904/Passing_dxph1q.png" />
+          <Image src={shootingImage} />
+          <Image src={speedImage} />
+          <Image src={passingImage} />
         </Box>
         <Box display="flex" alignItems="center">
-          <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812960/Defend_zaq45x.png" />
-          <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812979/Catch_yyplwq.png" />
+          <Image src={defendImage} />
+          <Image src={catchImage} />
         </Box>
       </Box>
       <Box className="childBox mt-1rem">

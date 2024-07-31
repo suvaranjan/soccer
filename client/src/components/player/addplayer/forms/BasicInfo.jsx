@@ -11,6 +11,8 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { ErrorMessage } from "formik";
+import LeftFoot from "../../../../Images/left-foot.png";
+import RightFoot from "../../../../Images/right-foot.png";
 
 const BasicInfo = ({ myAvatar, handleFileChange, formik }) => {
   return (
@@ -158,12 +160,12 @@ const BasicInfo = ({ myAvatar, handleFileChange, formik }) => {
           <Flex gap="3rem">
             <Box>
               <Radio value="LW">
-                <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717828085/Foot_Left_thrajd.png" />
+                <Image src={LeftFoot} />
               </Radio>
             </Box>
             <Box>
               <Radio value="RW">
-                <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717828561/Foot_Right_kg7lae.png" />
+                <Image src={RightFoot} />
               </Radio>
             </Box>
           </Flex>
