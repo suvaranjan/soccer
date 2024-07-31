@@ -1,6 +1,8 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Avatar, Box, Button, Code, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import GoldImage from "../../Images/gold.png";
+import DimondImage from "../../Images/dimond.png.png";
 
 export function FirstCard({ playerData, toggleFirstCard, logoutUser }) {
   return (
@@ -62,10 +64,7 @@ export function Balance({ playerData }) {
             zGold
           </Text>
           <Box display="flex" alignItems="center">
-            <Image
-              src="https://res.cloudinary.com/suvaranjan/image/upload/v1717605347/Gold_bizhbs.png"
-              height="25px"
-            />
+            <Image src={GoldImage} height="25px" />
             <Text fontWeight="600">{playerData.zGold}</Text>
           </Box>
         </Box>
@@ -74,10 +73,7 @@ export function Balance({ playerData }) {
             Diamond
           </Text>
           <Box display="flex" alignItems="center">
-            <Image
-              src="https://res.cloudinary.com/suvaranjan/image/upload/v1717605364/Diamond_ihmgtt.png"
-              height="25px"
-            />
+            <Image src={DimondImage} height="25px" />
             <Text fontWeight="600">{playerData.diamond}</Text>
           </Box>
         </Box>
