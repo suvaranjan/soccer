@@ -2,7 +2,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Avatar, Box, Button, Code, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import GoldImage from "../../Images/gold.png";
-import DimondImage from "../../Images/dimond.png.png";
+import DimondImage from "../../Images/dimond.png";
 
 export function FirstCard({ playerData, toggleFirstCard, logoutUser }) {
   return (
