@@ -6,17 +6,86 @@ const Notification = require('../models/Notification');
 const Player = require('../models/Player');
 const Referee = require('../models/Referee');
 
+// const login = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+
+//         // Input validation
+//         if (!email || !password) {
+//             return res.status(400).json({ msg: 'Missing required fields' });
+//         }
+
+//         // Check if user exists
+//         const user = await User.findOne({ email });
+//         if (!user) {
+//             return res.status(400).json({ msg: 'User does not exist' });
+//         }
+
+//         // Check password
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(400).json({ msg: 'Invalid credentials' });
+//         }
+
+//         // Generate token
+//         const token = jwt.sign({ _id: user._id, role: user.role }, process.env.SECRET_KEY);
+
+//         let responseUser;
+
+//         if (user.role === 'player') {
+//             responseUser = await Player.findOne({ user: user._id }).populate('user', 'userName role');
+//         } else if (user.role === 'team-manager') {
+//             responseUser = await TeamManager.findOne({ user: user._id }).populate('user', 'userName role');
+//         } else if (user.role === 'referee') {
+//             responseUser = await Referee.findOne({ user: user._id }).populate('user', 'userName role');
+//         } else {
+//             responseUser = user;  // Handle other roles if necessary
+//         }
+
+//         const count = await Notification.countDocuments({ user: user._id, read: false });
+
+//         // Send response
+//         res.status(200).json({
+//             token,
+//             msg: "login Successfull",
+//             user: {
+//                 _id: responseUser.user._id,
+//                 userName: responseUser.user.userName,
+//                 role: user.role,
+//                 zGold: responseUser.zGold,
+//                 diamond: responseUser.diamond,
+//                 avatar: responseUser.avatar,
+//                 level: user.role === 'player' ? responseUser.level : undefined
+//             },
+//             role: responseUser.user.role,
+//             unreadNotificationsCount: count,
+//             _id: responseUser._id
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ msg: 'Internal Server Error' });
+//     }
+// };
+
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { emailOrUsername, password } = req.body;
 
         // Input validation
-        if (!email || !password) {
+        if (!emailOrUsername || !password) {
             return res.status(400).json({ msg: 'Missing required fields' });
         }
 
+        // Check if the input is an email or username
+        let query = {};
+        if (emailOrUsername.includes('@')) {
+            query.email = emailOrUsername;
+        } else {
+            query.userName = emailOrUsername;
+        }
+
         // Check if user exists
-        const user = await User.findOne({ email });
+        const user = await User.findOne(query);
         if (!user) {
             return res.status(400).json({ msg: 'User does not exist' });
         }
@@ -47,7 +116,7 @@ const login = async (req, res) => {
         // Send response
         res.status(200).json({
             token,
-            msg: "login Successfull",
+            msg: "Login successful",
             user: {
                 _id: responseUser.user._id,
                 userName: responseUser.user.userName,

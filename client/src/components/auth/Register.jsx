@@ -23,9 +23,7 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setMyEmail, setMyPassword, setMyUserName, myRole } = useStore(
-    (state) => state
-  );
+  const { myRole } = useStore((state) => state);
   const toast = useToast();
 
   const handleRegister = async (e) => {
@@ -47,9 +45,17 @@ function Register() {
         userName,
         role: myRole,
       });
-      setMyEmail(email);
-      setMyPassword(password);
-      setMyUserName(userName);
+      toast({
+        title: "Registration Successfull",
+        // description: "Something went wrong",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "top",
+        containerStyle: {
+          fontSize: "1rem",
+        },
+      });
       navigate("/login");
     } catch (error) {
       console.log("Registration failed:", error.message);
@@ -111,6 +117,25 @@ function Register() {
             </Box>
           </Box>
           <Box mt={8} as="form" onSubmit={handleRegister}>
+            <Box
+              bg="#C6F6D5"
+              p="8px"
+              borderRadius="md"
+              mb={3}
+              fontSize=".8rem"
+              fontWeight="500"
+            >
+              Role Selected :
+              <Text
+                display="inline"
+                ml={1}
+                fontWeight="700"
+                color="#2F855A"
+                textTransform="uppercase"
+              >
+                {myRole}
+              </Text>
+            </Box>
             <FormControl isInvalid={errors.userName}>
               <Input
                 type="text"

@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { getMyPlayers } from "../../api/api";
 import useLoginUser from "../../hooks/useLoginUser";
 import { useNavigate } from "react-router-dom";
+import addPlayersPng from "../../Images/add-players.png";
 
 function MyPlayers() {
   const { loginUser } = useLoginUser();
@@ -139,7 +140,7 @@ function MyPlayers() {
                   Looks like, You have No Players.
                 </Text>
                 <Image
-                  src="https://res.cloudinary.com/suvaranjan/image/upload/v1717652910/Add_players_a_raumyb.png"
+                  src={addPlayersPng}
                   cursor="pointer"
                   onClick={() => navigate("/add-player")}
                 />

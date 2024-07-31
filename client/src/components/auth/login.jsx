@@ -18,7 +18,7 @@ import useLoginUser from "../../hooks/useLoginUser";
 import bgImage from "../../Images/main-bg.jpeg";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const formValues = { email, password };
+    const formValues = { emailOrUsername, password };
     const validationErrors = validateLogin(formValues);
 
     if (Object.keys(validationErrors).length !== 0) {
@@ -40,7 +40,10 @@ function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${baseUrl}/login`, { email, password });
+      const res = await axios.post(`${baseUrl}/login`, {
+        emailOrUsername,
+        password,
+      });
 
       let userData = {
         token: res.data.token,
@@ -144,17 +147,17 @@ function Login() {
             </Box>
           </Box>
           <Box mt={8} as="form" onSubmit={handleLogin}>
-            <FormControl isInvalid={errors.email}>
+            <FormControl isInvalid={errors.emailOrUsername}>
               {/* <FormLabel>Email</FormLabel> */}
               <Input
-                type="email"
-                placeholder="Email"
+                type="text"
+                placeholder="Email or Username"
                 maxW="500px"
                 bg="#FAFAFA"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
               />
-              <FormErrorMessage>{errors.email}</FormErrorMessage>
+              <FormErrorMessage>{errors.emailOrUsername}</FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={errors.password} mt={4}>
               {/* <FormLabel>Password</FormLabel> */}

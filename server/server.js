@@ -26,16 +26,10 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 
-// Define the client build directory
-const dirname1 = path.resolve();
-
-// Serve static files from the dist directory
-app.use(express.static(path.join(dirname1, '../client/dist')));
-
 // Routes
-// app.get('/', (req, res) => {
-//     res.send('Welcome to the soccer app');
-// });
+app.get('/', (req, res) => {
+    res.send('Welcome to the soccer app');
+});
 
 app.post('/upload', (req, res) => {
     upload(req, res, (err) => {
@@ -67,10 +61,12 @@ app.use("/api/reminder", reminderRoutes);
 
 // Deployment logic
 
-// Catch-all route to serve index.html for client-side routing
-app.use('*', (req, res) => {
-    res.sendFile(path.resolve(dirname1, "client", "dist", "index.html"));
-});
+// const dirname1 = path.resolve();
+// app.use(express.static(path.join(dirname1, '../client/dist')));
+
+// app.use('*', (req, res) => {
+//     res.sendFile(path.resolve(dirname1, "client", "dist", "index.html"));
+// });
 
 
 connect().then(() => {

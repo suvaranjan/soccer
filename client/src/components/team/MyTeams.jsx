@@ -19,6 +19,7 @@ import useLoginUser from "../../hooks/useLoginUser";
 import { getManagerTeams, setAsDefaultTeam } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import addTeamsPng from "../../Images/add-team.png";
 
 function MyTeams() {
   const { loginUser } = useLoginUser();
@@ -155,7 +156,7 @@ function MyTeams() {
                   Looks like, You have No Teams.
                 </Text>
                 <Image
-                  src="https://res.cloudinary.com/suvaranjan/image/upload/v1717653049/Add_teams_xeo9ut.png"
+                  src={addTeamsPng}
                   cursor="pointer"
                   onClick={() => navigate("/create-team")}
                 />

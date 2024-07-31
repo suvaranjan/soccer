@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import { Box, Spinner, Button, Text } from "@chakra-ui/react";
+import { Box, Text, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { getAllMatches } from "../../api/api";
 import useLoginUser from "../../hooks/useLoginUser";
@@ -14,7 +14,7 @@ const NewsCard = () => {
   const { loginUser } = useLoginUser();
   const navigate = useNavigate();
   const { matches, setMatches } = useStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading
 
   useEffect(() => {
     if (matches.length === 0) {
@@ -22,11 +22,10 @@ const NewsCard = () => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [matches]);
 
   const fetchMatches = async () => {
     try {
-      setIsLoading(true);
       const res = await getAllMatches(loginUser.token, 1, 3);
       setMatches(res.data.matches);
     } catch (error) {
@@ -42,14 +41,36 @@ const NewsCard = () => {
       }
       // console.log("Error fetching matches:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Set loading to false regardless of success or failure
     }
+  };
+
+  const renderMessage = () => {
+    if (isLoading) {
+      return "Loading...";
+    } else if (matches.length === 0) {
+      return "No matches found";
+    }
+    return null;
   };
 
   return (
     <Box mt={{ base: 4, md: 0, lg: 0 }}>
-      {isLoading ? (
-        <Spinner size="xl" color="blue.500" />
+      {isLoading || matches.length === 0 ? (
+        <Box
+          width="344px"
+          height="200px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="md"
+          boxShadow="md"
+          bg="gray.200"
+        >
+          <Text fontSize="lg" color="gray.500">
+            {renderMessage()}
+          </Text>
+        </Box>
       ) : (
         <Swiper
           spaceBetween={30}
@@ -64,30 +85,11 @@ const NewsCard = () => {
           modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
         >
-          {matches.length > 0 ? (
-            matches.map((match) => (
-              <SwiperSlide key={match._id}>
-                <MatchCard match={match} />
-              </SwiperSlide>
-            ))
-          ) : (
-            <SwiperSlide>
-              <Box
-                width="344px"
-                height="200px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                borderRadius="md"
-                boxShadow="md"
-                bg="gray.200"
-              >
-                <Text fontSize="lg" color="gray.500">
-                  No matches found
-                </Text>
-              </Box>
+          {matches.map((match) => (
+            <SwiperSlide key={match._id}>
+              <MatchCard match={match} />
             </SwiperSlide>
-          )}
+          ))}
         </Swiper>
       )}
     </Box>
