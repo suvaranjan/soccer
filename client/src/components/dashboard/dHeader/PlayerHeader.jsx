@@ -30,7 +30,7 @@ function PlayerHeader({ headerData }) {
           <Box>
             <Avatar
               size="md"
-              name="John Doe"
+              name={headerData.userName}
               src={headerData.avatar}
               borderRadius="md"
               onClick={() => navigate("/profile")}

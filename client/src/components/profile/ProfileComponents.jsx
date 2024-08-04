@@ -14,7 +14,7 @@ export function FirstCard({ playerData, toggleFirstCard, logoutUser }) {
       position="relative"
     >
       <Box display="flex" alignItems="center" gap={2}>
-        <Avatar size="lg" src={playerData.avatar} />
+        <Avatar size="lg" name={playerData.userName} src={playerData.avatar} />
         <Box>
           <Text fontSize="1.2rem" fontWeight="600">
             {playerData.userName}
