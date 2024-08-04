@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 // const imageUploadUrl = "http://149.28.150.230:3000/upload";
 // const serverUrl = "http://149.28.150.230:3000";
 
-const imageUploadUrl = import.meta.env.VITE_IMAGE_UPLOAD_URL;
+const imageUploadUrl = "https://api.cloudinary.com/v1_1/suvaranjan/image/upload";
 // const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 export const imageUpload = async (file, setImage, setUpload) => {
