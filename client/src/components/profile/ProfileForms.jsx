@@ -24,14 +24,15 @@ import {
   updateUserProfile,
 } from "../../api/api";
 import useStore from "../../zustand/store";
-// import { isFormElement } from "react-router-dom/dist/dom";
 
 export function FirstCardForm({ data, toggleFirstCard }) {
   const [userName, setUserName] = useState(data.userName || "");
   const [avatar, setAvatar] = useState(data.avatar || "");
   const [uploading, setUploading] = useState(false);
   const { loginUser } = useLoginUser();
-  const { profileData, setProfileData } = useStore((state) => state);
+  const { profileData, setProfileData, headerData, setHeaderData } = useStore(
+    (state) => state
+  );
 
   const handleSave = async () => {
     if (userName === data.userName && avatar === data.avatar) {
@@ -57,7 +58,13 @@ export function FirstCardForm({ data, toggleFirstCard }) {
             userName,
             avatar,
           };
+          const updatedHeader = {
+            ...headerData,
+            userName,
+            avatar,
+          };
           setProfileData(updatedProfile);
+          setHeaderData(updatedHeader);
           toggleFirstCard();
           return "Profile Updated";
         },
