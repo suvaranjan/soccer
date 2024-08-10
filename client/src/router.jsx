@@ -28,6 +28,7 @@ import Fields from "./components/fields/Fields";
 import Reminder from "./components/reminder/Reminder";
 import LeagueForm from "./components/league/createLeague/LeagueForm";
 import RefereePage from "./components/referee/RefereePage";
+import Post from "./components/post/Post";
 
 export const router = createBrowserRouter([
   {
@@ -146,6 +147,10 @@ export const router = createBrowserRouter([
       {
         path: "/referee/profile/:refId",
         element: <RefereePage />,
+      },
+      {
+        path: "/posts",
+        element: <Post />,
       },
     ],
   },

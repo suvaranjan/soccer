@@ -1,4 +1,3 @@
-// PlayerStrengths.jsx
 import React from "react";
 import { Box, Image, Text, Progress } from "@chakra-ui/react";
 import passingImage from "../../../Images/passing.png";
@@ -7,7 +6,22 @@ import defendImage from "../../../Images/defend.png";
 import catchImage from "../../../Images/catch.png";
 import speedImage from "../../../Images/speed.png";
 
+const strengthOptions = {
+  shooting: shootingImage,
+  speed: speedImage,
+  passing: passingImage,
+  defend: defendImage,
+  catch: catchImage,
+};
+
 const PlayerStrengths = ({ player, toggle, showToggle }) => {
+  console.log(player);
+
+  // Filter the player's strengths to only show those that exist in strengthOptions
+  const strengthsToDisplay = player.strength
+    ? player.strength.filter((strength) => strengthOptions[strength])
+    : [];
+
   return (
     <Box
       p="1rem"
@@ -45,17 +59,35 @@ const PlayerStrengths = ({ player, toggle, showToggle }) => {
           </Box>
         )}
       </Box>
-      <Box className="childBox" mt="1rem" bg="rgba(255, 255, 255, 0.1)">
-        <Box display="flex" alignItems="center" mb="1rem">
-          <Image src={shootingImage} />
-          <Image src={speedImage} />
-          <Image src={passingImage} />
+
+      {/* Only show strength images if there are strengths to display */}
+      {strengthsToDisplay.length > 0 && (
+        <Box className="childBox" mt="1rem" bg="rgba(255, 255, 255, 0.1)">
+          <Box display="flex" alignItems="center" mb="1rem">
+            {strengthsToDisplay.slice(0, 3).map((strength) => (
+              <Image
+                key={strength}
+                src={strengthOptions[strength]}
+                alt={strength}
+                boxSize="70px"
+                mr="0.5rem"
+              />
+            ))}
+          </Box>
+          <Box display="flex" alignItems="center">
+            {strengthsToDisplay.slice(3).map((strength) => (
+              <Image
+                key={strength}
+                src={strengthOptions[strength]}
+                alt={strength}
+                boxSize="70px"
+                mr="0.5rem"
+              />
+            ))}
+          </Box>
         </Box>
-        <Box display="flex" alignItems="center">
-          <Image src={defendImage} />
-          <Image src={catchImage} />
-        </Box>
-      </Box>
+      )}
+
       <Box className="childBox mt-1rem">
         <PlayerStrength label="Striker" value={player.selfRating.striker} />
         <PlayerStrength label="Winger" value={player.selfRating.winger} />

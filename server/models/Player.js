@@ -13,6 +13,7 @@ const playerSchema = new mongoose.Schema({
     avatar: { type: String, default: "https://bit.ly/broken-link" },
     introduction: { type: String },
     preferredWing: { type: String, enum: ['LW', 'RW'], default: 'LW' },
+    strength: { type: [String], default: [] },
     selfRating: {
         striker: { type: Number, default: 0 },
         winger: { type: Number, default: 0 },

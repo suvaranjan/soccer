@@ -32,6 +32,7 @@ const getPlayerProfile = async (req, res) => {
         responseData.diamond = player.diamond;
         responseData.level = player.level;
         responseData.selfRating = player.selfRating;
+        responseData.strength = player.strength;
 
         res.status(200).json(responseData);
     } catch (error) {
@@ -46,7 +47,7 @@ const getPlayerById = async (req, res) => {
     try {
         // Find the player by ID and select the required fields
         const player = await Player.findById(playerId).select(
-            'fullName avatar dateOfBirth address age gender phone zGold diamond selfRating preferredWing value matches yearsPlaying hoursPerWeek'
+            'fullName avatar dateOfBirth address age gender phone zGold diamond selfRating preferredWing value matches yearsPlaying hoursPerWeek strength'
         );
 
         // If the player is not found, return a 404 response

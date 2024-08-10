@@ -5,6 +5,7 @@ export const initialValues = {
     dateOfBirth: "",
     gender: "",
     phone: "",
+    strength: [],  // Updated to an array for multiple strengths
     striker: 50,
     winger: 50,
     midfielder: 50,

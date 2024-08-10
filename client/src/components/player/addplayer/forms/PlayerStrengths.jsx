@@ -7,6 +7,10 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Checkbox,
+  CheckboxGroup,
+  Stack,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import passingImage from "../../../../Images/passing.png";
 import shootingImage from "../../../../Images/shooting.png";
@@ -14,7 +18,19 @@ import defendImage from "../../../../Images/defend.png";
 import catchImage from "../../../../Images/catch.png";
 import speedImage from "../../../../Images/speed.png";
 
+const options = [
+  { label: "Shooting", value: "shooting", image: shootingImage },
+  { label: "Speed", value: "speed", image: speedImage },
+  { label: "Passing", value: "passing", image: passingImage },
+  { label: "Defend", value: "defend", image: defendImage },
+  { label: "Catch", value: "catch", image: catchImage },
+];
+
 function PlayerStrengths({ formik }) {
+  const handleStrengthChange = (selectedValues) => {
+    formik.setFieldValue("strength", selectedValues);
+  };
+
   return (
     <Box
       p="1rem"
@@ -37,18 +53,32 @@ function PlayerStrengths({ formik }) {
           PLAYER STRENGTH
         </Text>
       </Box>
-      <Box className="childBox" mt="1rem" bg="rgba(255, 255, 255, 0.1)">
-        <Box display="flex" alignItems="center" mb="1rem">
-          <Image src={shootingImage} />
-          <Image src={speedImage} />
-          <Image src={passingImage} />
-        </Box>
-        <Box display="flex" alignItems="center">
-          <Image src={defendImage} />
-          <Image src={catchImage} />
-        </Box>
+      <Box
+        className="childBox"
+        mt="1rem"
+        bgGradient="linear-gradient(to right, #314755, #26a0da)"
+      >
+        <CheckboxGroup
+          name="strength"
+          value={formik.values.strength}
+          onChange={handleStrengthChange}
+        >
+          <SimpleGrid
+            columns={{ base: 2, md: 3 }}
+            spacing="1rem"
+            templateRows={{
+              base: "repeat(3, 1fr)",
+              md: "repeat(2, 1fr)",
+            }}
+          >
+            {options.map((option) => (
+              <Checkbox value={option.value} key={option.value}>
+                <Image src={option.image} alt={option.label} boxSize="70px" />
+              </Checkbox>
+            ))}
+          </SimpleGrid>
+        </CheckboxGroup>
       </Box>
-
       <Box className="childBox" mt="1rem" bg="rgba(255, 255, 255, 0.3)">
         <Box
           display="flex"

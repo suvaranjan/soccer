@@ -31,6 +31,8 @@ function AddPlayer() {
     let myValues = { ...values, avatar: myAvatar };
 
     try {
+      // console.log(myValues);
+
       const res = createPlayer(loginUser.token, myValues);
       toast.promise(res, {
         loading: `Adding Player..`,
@@ -79,17 +81,9 @@ function AddPlayer() {
                 />
               </Box>
               <Flex align="center" w="100%" justify="center" mt="1rem">
-                <Button
-                  type="submit"
-                  bgGradient="linear(to-r, teal.500, green.500)"
-                  color="white"
-                  _hover={{
-                    bgGradient: "linear(to-r, teal.400, green.400)",
-                  }}
-                  size="lg"
-                >
+                <button type="submit" className="btn-grad">
                   Create New Player
-                </Button>
+                </button>
               </Flex>
             </Box>
           </Form>

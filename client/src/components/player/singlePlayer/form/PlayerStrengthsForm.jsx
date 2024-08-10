@@ -8,12 +8,28 @@ import {
   SliderFilledTrack,
   SliderThumb,
   Flex,
+  Checkbox,
+  CheckboxGroup,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { updateManagerPlayer } from "../../../../api/api";
 import toast from "react-hot-toast";
 import useLoginUser from "../../../../hooks/useLoginUser";
+import passingImage from "../../../../Images/passing.png";
+import shootingImage from "../../../../Images/shooting.png";
+import defendImage from "../../../../Images/defend.png";
+import catchImage from "../../../../Images/catch.png";
+import speedImage from "../../../../Images/speed.png";
+
+const options = [
+  { value: "shooting", image: shootingImage },
+  { value: "speed", image: speedImage },
+  { value: "passing", image: passingImage },
+  { value: "defend", image: defendImage },
+  { value: "catch", image: catchImage },
+];
 
 const PlayerStrengthsForm = ({ initialValues, toggle, setPlayer }) => {
   const { loginUser } = useLoginUser();
@@ -26,6 +42,7 @@ const PlayerStrengthsForm = ({ initialValues, toggle, setPlayer }) => {
       wingDefender: Yup.number().required("Required").min(0).max(100),
       centralBack: Yup.number().required("Required").min(0).max(100),
     }),
+    strength: Yup.array().of(Yup.string()), // No validation needed for strengths
   });
 
   const sanitizedInitialValues = {
@@ -36,6 +53,14 @@ const PlayerStrengthsForm = ({ initialValues, toggle, setPlayer }) => {
       wingDefender: initialValues?.selfRating?.wingDefender || 0,
       centralBack: initialValues?.selfRating?.centralBack || 0,
     },
+    strength: initialValues?.strength || [],
+  };
+
+  const handleStrengthChange = (values) => {
+    setPlayer((prev) => ({
+      ...prev,
+      strength: values,
+    }));
   };
 
   const handleUpdate = async (values) => {
@@ -71,7 +96,7 @@ const PlayerStrengthsForm = ({ initialValues, toggle, setPlayer }) => {
           handleUpdate(values);
         }}
       >
-        {({ values }) => (
+        {({ values, setFieldValue }) => (
           <Form>
             <Box
               p="1rem"
@@ -106,17 +131,37 @@ const PlayerStrengthsForm = ({ initialValues, toggle, setPlayer }) => {
                   <i className="fa-solid fa-xmark"></i>
                 </Box>
               </Box>
-              <Box className="childBox" mt="1rem" bg="rgba(255, 255, 255, 0.1)">
-                <Box display="flex" alignItems="center" mb="1rem">
-                  <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812928/Shooting_afspxs.png" />
-                  <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812949/Speed_nht357.png" />
-                  <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812904/Passing_dxph1q.png" />
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812960/Defend_zaq45x.png" />
-                  <Image src="https://res.cloudinary.com/suvaranjan/image/upload/v1717812979/Catch_yyplwq.png" />
-                </Box>
+
+              <Box className="childBox mt-1rem">
+                <CheckboxGroup
+                  name="strength"
+                  value={values.strength}
+                  onChange={(selectedValues) => {
+                    setFieldValue("strength", selectedValues);
+                    handleStrengthChange(selectedValues);
+                  }}
+                >
+                  <SimpleGrid
+                    columns={{ base: 2, md: 3 }}
+                    spacing="1rem"
+                    templateRows={{
+                      base: "repeat(3, 1fr)",
+                      md: "repeat(2, 1fr)",
+                    }}
+                  >
+                    {options.map((option) => (
+                      <Checkbox value={option.value} key={option.value}>
+                        <Image
+                          src={option.image}
+                          alt={option.label}
+                          boxSize="70px"
+                        />
+                      </Checkbox>
+                    ))}
+                  </SimpleGrid>
+                </CheckboxGroup>
               </Box>
+
               <Box className="childBox mt-1rem">
                 <PlayerStrength label="Striker" name="selfRating.striker" />
                 <PlayerStrength label="Winger" name="selfRating.winger" />
@@ -133,6 +178,7 @@ const PlayerStrengthsForm = ({ initialValues, toggle, setPlayer }) => {
                   name="selfRating.centralBack"
                 />
               </Box>
+
               <Flex align="center" justify="center" mt="1rem">
                 <button className="btn-grad" type="submit">
                   Save

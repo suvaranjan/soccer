@@ -86,6 +86,7 @@ const addPlayer = async (req, res) => {
         preferredWing,
         yearsPlaying,
         hoursPerWeek,
+        strength,
     } = req.body;
 
     try {
@@ -113,7 +114,8 @@ const addPlayer = async (req, res) => {
             avatar,
             preferredWing,
             yearsPlaying,
-            hoursPerWeek
+            hoursPerWeek,
+            strength
         });
 
         // Save new player to database
@@ -227,7 +229,7 @@ const getManagerTeams = async (req, res) => {
 
 const managerPlayerUpdate = async (req, res) => {
     const { playerId } = req.params;
-    const { fullName, dateOfBirth, age, gender, phone, preferredWing, selfRating, avatar } = req.body;
+    const { fullName, dateOfBirth, age, gender, phone, preferredWing, selfRating, avatar, strength } = req.body;
     const userId = req.user._id;
 
     try {
@@ -258,6 +260,7 @@ const managerPlayerUpdate = async (req, res) => {
         player.preferredWing = preferredWing || player.preferredWing;
         player.avatar = avatar || player.avatar;
         player.selfRating = selfRating || player.selfRating;
+        player.strength = strength || player.strength;
 
         await player.save();
 
