@@ -39,7 +39,6 @@ function MyTeams() {
       const res = await getManagerTeams(loginUser.token);
       setDefaultTeamId(res.data.defaultTeam);
       setMyTeams(res.data.teams);
-      setSelectedTeam(res.data.teams[0]);
     } catch (error) {
       console.error(error);
     } finally {

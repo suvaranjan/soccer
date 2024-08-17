@@ -18,6 +18,16 @@ export async function getUserHeader(token) {
     return response;
 };
 
+export async function getUser(token) {
+
+    const response = await axios.get(`${baseUrl}/user`, {
+        headers: getHeader(token),
+    });
+
+    return response;
+};
+
+
 export async function getPlayerProfile(token, userId) {
 
     const response = await axios.get(`${baseUrl}/player/profile/${userId}`, {
@@ -662,3 +672,56 @@ export async function updateRefereeFee(token, data) {
 
     return response;
 };
+
+export async function createPost(token, data) {
+
+    const response = await axios.post(`${baseUrl}/posts/create`, data, {
+        headers: getHeader(token),
+    });
+
+    return response;
+};
+
+export async function getPosts(token, page = 1, limit = 4) {
+    const response = await axios.get(`${baseUrl}/posts`, {
+        headers: getHeader(token),
+        params: { page, limit },
+    });
+    return response;
+}
+
+export async function getSinglePostById(token, postId) {
+    const response = await axios.get(`${baseUrl}/posts/${postId}`, {
+        headers: getHeader(token),
+    });
+    return response;
+}
+
+export async function addLikeToPost(token, postId) {
+    const response = await axios.post(`${baseUrl}/posts/${postId}/add-like`, {}, {
+        headers: getHeader(token),
+    });
+    return response;
+}
+
+export async function removeLikeFromPost(token, postId) {
+    const response = await axios.post(`${baseUrl}/posts/${postId}/remove-like`, {}, {
+        headers: getHeader(token),
+    });
+    return response;
+}
+
+export async function getCommentsOfPost(token, postId, page = 1, limit = 3) {
+    const response = await axios.get(`${baseUrl}/posts/${postId}/comments`, {
+        headers: getHeader(token),
+        params: { page, limit },
+    });
+    return response;
+}
+
+export async function addCommentToPost(token, postId, comment) {
+    const response = await axios.post(`${baseUrl}/posts/${postId}/add-comment`, { comment }, {
+        headers: getHeader(token),
+    });
+    return response;
+}

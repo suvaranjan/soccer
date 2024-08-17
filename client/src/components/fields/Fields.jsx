@@ -16,6 +16,8 @@ import FieldCard from "./FieldCard";
 import SkeletonFieldCard from "./FieldSkeleton";
 import FieldForm from "./forms/FieldForm";
 import toast from "react-hot-toast";
+import { checkFileType } from "../../helper/fileCheck";
+import { imageUpload } from "../../helper/imageUpload";
 
 function Fields() {
   const { loginUser } = useLoginUser();
@@ -27,6 +29,8 @@ function Fields() {
   const [keyword, setKeyword] = useState("");
   const [addingField, setAddingField] = useState(false);
   const [fieldImage, setFieldImage] = useState("");
+  const [file, setFile] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchFields();
@@ -81,31 +85,86 @@ function Fields() {
   };
 
   const handleSubmit = async (values) => {
-    try {
-      let newValues = values;
-
-      if (fieldImage === "") {
-        return toast.error("Field Photo is required");
-      } else {
-        newValues = { ...values, photo: fieldImage };
-      }
-
-      // console.log(newValues);
-
-      const res = addField(loginUser.token, newValues);
-
-      toast.promise(res, {
-        loading: `Adding Field..`,
-        success: (res) => {
-          return "New Field Added";
-        },
-        error: (e) => {
-          return e.response.data.msg;
-        },
-      });
-    } catch (error) {
-      console.log(error);
+    if (!file) {
+      toast.error("Field Photo is required");
+      return;
     }
+
+    let toastId = toast.loading("Processing..."); // Initialize with a single loading toast
+    let newAvatar = fieldImage;
+
+    // Image Upload Logic (if a new file is selected)
+    if (file) {
+      try {
+        if (!checkFileType(file, "image-upload")) {
+          toast.error("Please select a JPG or PNG image!", { id: toastId });
+          return;
+        }
+
+        setSubmitting(true);
+
+        newAvatar = await imageUpload(file, (percentCompleted) => {
+          toast.loading(`Uploading ${percentCompleted}%`, {
+            id: toastId,
+          });
+        });
+
+        if (!newAvatar) {
+          toast.error("Error uploading image", { id: toastId });
+          return;
+        }
+
+        setFieldImage(newAvatar);
+      } catch (error) {
+        toast.error("Error uploading image", { id: toastId });
+        return;
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    // Saving Updated Data with the latest avatar URL
+    try {
+      setSubmitting(true);
+
+      let newValues = { ...values, photo: newAvatar };
+
+      toast.loading(`Saving..`, {
+        id: toastId,
+      });
+
+      await addField(loginUser.token, newValues);
+
+      toast.success("Field Added", { id: toastId });
+    } catch (error) {
+      toast.error("Error updating profile", { id: toastId });
+    } finally {
+      setSubmitting(true);
+    }
+
+    // try {
+    //   let newValues = values;
+
+    //   if (fieldImage === "") {
+    //     return toast.error("Field Photo is required");
+    //   } else {
+    //     newValues = { ...values, photo: fieldImage };
+    //   }
+
+    //   const res = addField(loginUser.token, newValues);
+
+    //   toast.promise(res, {
+    //     loading: `Adding Field..`,
+    //     success: (res) => {
+    //       return "New Field Added";
+    //     },
+    //     error: (e) => {
+    //       return e.response.data.msg;
+    //     },
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -217,6 +276,8 @@ function Fields() {
             toggle={toogleForm}
             fieldImage={fieldImage}
             setFieldImage={setFieldImage}
+            setFile={setFile}
+            file={file}
           />
         )}
       </Box>

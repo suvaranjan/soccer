@@ -11,41 +11,84 @@ import { createPlayer } from "../../../api/api";
 import useLoginUser from "../../../hooks/useLoginUser";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { checkFileType } from "../../../helper/fileCheck";
 
 function AddPlayer() {
   const { loginUser } = useLoginUser();
   const [myAvatar, setMyAvatar] = useState("https://bit.ly/broken-link");
-  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
+  const [file, setFile] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    try {
-      await imageUpload(file, setMyAvatar, setUploading);
-    } catch (error) {
-      console.log(error);
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Show the selected image as a preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setMyAvatar(reader.result);
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
     }
   };
 
   const handleSubmit = async (values) => {
-    let myValues = { ...values, avatar: myAvatar };
+    let toastId = toast.loading("Adding Player...");
+    let newAvatar = myAvatar;
+
+    // Image Upload Logic (if a new file is selected)
+    if (file) {
+      try {
+        if (!checkFileType(file, "image-upload")) {
+          toast.error("Please select a JPG or PNG image!", { id: toastId });
+          return;
+        }
+
+        setSubmitting(true);
+
+        // Update the toast message dynamically as the upload progresses
+        newAvatar = await imageUpload(file, (percentCompleted) => {
+          toast.loading(`Uploading ${percentCompleted}%`, {
+            id: toastId,
+          });
+        });
+
+        console.log(newAvatar);
+
+        if (!newAvatar) {
+          toast.error("Error uploading image", { id: toastId });
+          return;
+        }
+
+        setMyAvatar(newAvatar);
+      } catch (error) {
+        console.log(error);
+        toast.error("Error uploading image", { id: toastId });
+        return;
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    let myValues = { ...values, avatar: newAvatar };
 
     try {
-      // console.log(myValues);
+      setSubmitting(true);
 
-      const res = createPlayer(loginUser.token, myValues);
-      toast.promise(res, {
-        loading: `Adding Player..`,
-        success: (res) => {
-          navigate(`/player/${res.data.playerId}`);
-          return "New Player Created";
-        },
-        error: (e) => {
-          return e.response.data.msg;
-        },
+      toast.loading(`Saving..`, {
+        id: toastId,
       });
+
+      const res = await createPlayer(loginUser.token, myValues);
+      toast.success("New Player Created", { id: toastId });
+      navigate(`/player/${res.data.playerId}`);
     } catch (error) {
       console.log(error);
+      toast.error("Error creating player", { id: toastId });
+    } finally {
+      setSubmitting(true);
     }
   };
 

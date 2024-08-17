@@ -27,6 +27,7 @@ import { ArrowUpIcon } from "@chakra-ui/icons";
 import PhotoCard from "./PhotoCard";
 import { imageUpload } from "../../../helper/imageUpload";
 import toast from "react-hot-toast";
+import { checkFileType } from "../../../helper/fileCheck";
 
 export default function TeamPage() {
   const { loginUser } = useLoginUser();
@@ -86,6 +87,7 @@ export default function TeamPage() {
   };
 
   const toggleBasicInfoEdit = () => {
+    console.log("Toggling");
     setIsBasicInfoEditing(!isBasicInfoEditing);
   };
 
@@ -124,10 +126,38 @@ export default function TeamPage() {
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    try {
-      await imageUpload(file, handlePhotoUpload, setUploading);
-    } catch (error) {
-      console.log(error);
+    // try {
+    //   await imageUpload(file, handlePhotoUpload, setUploading);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    if (file) {
+      if (!checkFileType(file, "image-upload")) {
+        toast.error("Please select a JPG or PNG image!");
+        return;
+      }
+
+      setUploading(true);
+      toast.loading("Uploading image...", { id: "upload" });
+
+      try {
+        const uploadedUrl = await imageUpload(file, (progress) => {
+          toast.loading(`Uploading... ${progress}%`, { id: "upload" });
+        });
+
+        if (uploadedUrl) {
+          toast.success("Image uploaded successfully!", { id: "upload" });
+          handlePhotoUpload(uploadedUrl);
+        } else {
+          toast.error("Image upload failed.");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        toast.error("Image upload failed.");
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
@@ -186,7 +216,7 @@ export default function TeamPage() {
             {!isBasicInfoEditing && (
               <BasicInfo
                 team={team}
-                toggle={toggleBasicInfoEdit}
+                toogle={toggleBasicInfoEdit}
                 showToggle={isLoginUserManagerOfTeam}
               />
             )}

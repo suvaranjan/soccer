@@ -203,12 +203,12 @@ const updateTeamInfo = async (req, res) => {
         }
 
         if (coachId !== team.coach.toHexString()) {
-            return res.status(403).json({ msg: 'Coach is not found' });
+            return res.status(403).json({ msg: 'Coach is not associated with this team' });
         }
 
         const myCoach = await Coach.findById(coachId);
 
-        if (myCoach) {
+        if (!myCoach) {
             return res.status(403).json({ msg: 'Coach is not found' });
         }
 

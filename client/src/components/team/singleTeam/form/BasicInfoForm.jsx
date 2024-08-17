@@ -20,14 +20,16 @@ import useLoginUser from "../../../../hooks/useLoginUser";
 import toast from "react-hot-toast";
 import validation from "./validation";
 import getInitialValues from "./getInitialValues";
+import { checkFileType } from "../../../../helper/fileCheck";
 
-export default function BasicInfoForm({ initialValues, toogleFunc, setTeam }) {
+export default function BasicInfoForm({ initialValues, toggleFunc, setTeam }) {
   const { loginUser } = useLoginUser();
   const [teamAvatar, setTeamAvatar] = useState(initialValues.avatar || "");
   const [coachAvatar, setCoachAvatar] = useState(
     initialValues.coach.avatar || ""
   );
   const [uploading, setUploading] = useState(false);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     setTeamAvatar(initialValues.avatar);
@@ -36,25 +38,79 @@ export default function BasicInfoForm({ initialValues, toogleFunc, setTeam }) {
 
   const handleTeamAvatar = async (event) => {
     const file = event.target.files[0];
-    try {
-      await imageUpload(file, setTeamAvatar, setUploading);
-    } catch (error) {
-      console.log(error);
+    // try {
+    //   await imageUpload(file, setTeamAvatar, setUploading);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    if (file) {
+      setUploading(true);
+      toast.loading("Uploading image...", { id: "upload" });
+
+      try {
+        const uploadedUrl = await imageUpload(file, (progress) => {
+          toast.loading(`Uploading... ${progress}%`, { id: "upload" });
+        });
+
+        if (uploadedUrl) {
+          setTeamAvatar(uploadedUrl);
+
+          toast.success("Image uploaded successfully!", { id: "upload" });
+        } else {
+          toast.error("Image upload failed.");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        toast.error("Image upload failed.");
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
   const handleCoachAvatar = async (event) => {
     const file = event.target.files[0];
-    try {
-      await imageUpload(file, setCoachAvatar, setUploading);
-    } catch (error) {
-      console.log(error);
+    // try {
+    //   await imageUpload(file, setCoachAvatar, setUploading);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    if (file) {
+      if (!checkFileType(file, "image-upload")) {
+        toast.error("Please select a JPG or PNG image!");
+        return;
+      }
+
+      setUploading(true);
+      toast.loading("Uploading image...", { id: "upload" });
+
+      try {
+        const uploadedUrl = await imageUpload(file, (progress) => {
+          toast.loading(`Uploading... ${progress}%`, { id: "upload" });
+        });
+
+        if (uploadedUrl) {
+          setCoachAvatar(uploadedUrl);
+
+          toast.success("Image uploaded successfully!", { id: "upload" });
+        } else {
+          toast.error("Image upload failed.");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        toast.error("Image upload failed.");
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
   const handleUpdate = async (values) => {
     try {
       console.log(values);
+      console.log(initialValues.coach._id);
 
       const res = updateTeamBasicInfo(loginUser.token, {
         ...values,
@@ -70,7 +126,7 @@ export default function BasicInfoForm({ initialValues, toogleFunc, setTeam }) {
             avatar: teamAvatar,
             coach: { ...prev.coach, avatar: coachAvatar },
           }));
-          toogleFunc();
+          toggleFunc();
           return "Team Updated";
         },
         error: (e) => {
@@ -129,7 +185,7 @@ export default function BasicInfoForm({ initialValues, toogleFunc, setTeam }) {
                 p="5px 10px"
                 borderRadius="md"
                 fontSize="1.1rem"
-                onClick={toogleFunc}
+                onClick={toggleFunc}
               >
                 <i className="fa-solid fa-xmark"></i>
               </Box>

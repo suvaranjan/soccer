@@ -9,6 +9,8 @@ import {
 import { useState } from "react";
 import { Field, ErrorMessage } from "formik";
 import { imageUpload } from "../../../../helper/imageUpload";
+import toast from "react-hot-toast";
+import { checkFileType } from "../../../../helper/fileCheck";
 
 const CoachInfo = ({ coach, setCoach, onUpload }) => {
   const [loading, setLoading] = useState(false);
@@ -16,16 +18,35 @@ const CoachInfo = ({ coach, setCoach, onUpload }) => {
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    try {
-      await imageUpload(file, settingAvatar, setLoading);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const settingAvatar = (image) => {
-    setAvatar(image);
-    onUpload(image);
+    if (!checkFileType(file, "image-upload")) {
+      toast.error("Please select a JPG or PNG image!");
+      return;
+    }
+
+    if (file) {
+      setLoading(true);
+      toast.loading("Uploading image...", { id: "upload" });
+
+      try {
+        const uploadedUrl = await imageUpload(file, (progress) => {
+          toast.loading(`Uploading... ${progress}%`, { id: "upload" });
+        });
+
+        if (uploadedUrl) {
+          setAvatar(uploadedUrl);
+          onUpload(uploadedUrl);
+          toast.success("Image uploaded successfully!", { id: "upload" });
+        } else {
+          toast.error("Image upload failed.");
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        toast.error("Image upload failed.");
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (

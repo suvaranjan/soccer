@@ -16,18 +16,25 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import useLoginUser from "../../hooks/useLoginUser";
 
 // PostCard component
-function PostCard({ post }) {
+function PostCard({ post, toggleLike, commentBtnClick, shareBtnClick }) {
+  const { loginUser } = useLoginUser();
+
   // Slick settings for slider
   const settings = {
     dots: true,
-    infinite: post.media.length > 1, // Enable infinite scrolling only if there's more than one media item
-    // infinite: false,
+    infinite: post.media.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
+  };
+
+  // Helper to format like count
+  const formatLikeCount = (count) => {
+    return count >= 1000 ? `${(count / 1000).toFixed(1)}k` : count;
   };
 
   return (
@@ -103,14 +110,28 @@ function PostCard({ post }) {
         <Button
           flex="1"
           variant="ghost"
-          leftIcon={<i className="fa-regular fa-thumbs-up"></i>}
+          leftIcon={
+            post.likes.includes(loginUser.userId) ? (
+              <i
+                className="fa-solid fa-thumbs-up"
+                style={{ color: "#3182ce" }}
+              ></i>
+            ) : (
+              <i className="fa-regular fa-thumbs-up"></i>
+            )
+          }
+          onClick={() => toggleLike(post._id)}
         >
+          {formatLikeCount(post.likes.length) > 0
+            ? formatLikeCount(post.likes.length)
+            : null}{" "}
           Like
         </Button>
         <Button
           flex="1"
           variant="ghost"
           leftIcon={<i className="fa-regular fa-comment"></i>}
+          onClick={() => commentBtnClick(post._id)}
         >
           Comment
         </Button>
@@ -118,6 +139,7 @@ function PostCard({ post }) {
           flex="1"
           variant="ghost"
           leftIcon={<i className="fa-solid fa-share"></i>}
+          onClick={() => shareBtnClick(post._id)}
         >
           Share
         </Button>

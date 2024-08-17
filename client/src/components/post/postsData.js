@@ -1,4 +1,4 @@
-export const posts = [
+export const dummyPosts = [
     {
         _id: "64dca13f2f71a4c83a0b26a1",
         user: {
@@ -9,7 +9,7 @@ export const posts = [
         content: "Excited to share some highlights from our last match! Check out the awesome goals.",
         media: [
             {
-                url: "https://res.cloudinary.com/suvaranjan/video/upload/v1723216536/10sec-landscape_upcamm.mp4",
+                url: "https://res.cloudinary.com/suvaranjan/video/upload/v1723262144/football_vsdy4v.mp4",
                 mediaType: "video"
             },
             {
@@ -30,6 +30,51 @@ export const posts = [
                 },
                 comment: "Amazing goals! That last one was incredible.",
                 createdAt: "2024-08-09T14:23:34Z"
+            },
+            {
+                user: {
+                    _id: "64dc9f7b2f71a4c83a0b269e",
+                    userName: "MikeJohnson",
+                    avatar: "https://example.com/avatars/mikejohnson.jpg"
+                },
+                comment: "Great game! Looking forward to the next one.",
+                createdAt: "2024-08-09T15:45:12Z"
+            },
+            {
+                user: {
+                    _id: "64dc9f7b2f71a4c83a0b269e",
+                    userName: "MikeJohnson",
+                    avatar: "https://example.com/avatars/mikejohnson.jpg"
+                },
+                comment: "Great game! Looking forward to the next one.",
+                createdAt: "2024-08-09T15:45:12Z"
+            },
+            {
+                user: {
+                    _id: "64dc9f7b2f71a4c83a0b269e",
+                    userName: "MikeJohnson",
+                    avatar: "https://example.com/avatars/mikejohnson.jpg"
+                },
+                comment: "Great game! Looking forward to the next one.",
+                createdAt: "2024-08-09T15:45:12Z"
+            },
+            {
+                user: {
+                    _id: "64dc9f7b2f71a4c83a0b269e",
+                    userName: "MikeJohnson",
+                    avatar: "https://example.com/avatars/mikejohnson.jpg"
+                },
+                comment: "Great game! Looking forward to the next one.",
+                createdAt: "2024-08-09T15:45:12Z"
+            },
+            {
+                user: {
+                    _id: "64dc9f7b2f71a4c83a0b269e",
+                    userName: "MikeJohnson",
+                    avatar: "https://example.com/avatars/mikejohnson.jpg"
+                },
+                comment: "Great game! Looking forward to the next one.",
+                createdAt: "2024-08-09T15:45:12Z"
             },
             {
                 user: {

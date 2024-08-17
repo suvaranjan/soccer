@@ -17,15 +17,26 @@ import initialValues from "./initialValues";
 import validationSchema from "./validate";
 import { imageUpload } from "../../../helper/imageUpload";
 
-function FieldForm({ handleSubmit, toggle, fieldImage, setFieldImage }) {
+function FieldForm({
+  handleSubmit,
+  toggle,
+  fieldImage,
+  setFieldImage,
+  setFile,
+}) {
   const [uploading, setUploading] = useState(false);
 
   const handleFieldImage = async (event) => {
-    const file = event.target.files[0];
-    try {
-      await imageUpload(file, setFieldImage, setUploading);
-    } catch (error) {
-      console.log(error);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Show the selected image as a preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFieldImage(reader.result);
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
     }
   };
 

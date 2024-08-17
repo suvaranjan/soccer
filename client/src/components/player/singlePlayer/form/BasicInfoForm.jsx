@@ -17,11 +17,13 @@ import { imageUpload } from "../../../../helper/imageUpload";
 import useLoginUser from "../../../../hooks/useLoginUser";
 import { updateManagerPlayer } from "../../../../api/api";
 import toast from "react-hot-toast";
+import { checkFileType } from "../../../../helper/fileCheck";
 
 const BasicInfoForm = ({ initialValues, toggle, setPlayer }) => {
   const { loginUser } = useLoginUser();
   const [playerAvatar, setPlayerAvatar] = useState(initialValues.avatar);
-  const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [file, setFile] = useState(null);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -52,36 +54,78 @@ const BasicInfoForm = ({ initialValues, toggle, setPlayer }) => {
     hoursPerWeek: initialValues.hoursPerWeek || "",
   };
 
-  const handleAvatar = async (event) => {
-    const file = event.target.files[0];
-    try {
-      await imageUpload(file, setPlayerAvatar, setUploading);
-    } catch (error) {
-      console.log(error);
+  const handleAvatar = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Show the selected image as a preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPlayerAvatar(reader.result);
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
     }
   };
 
   const handleUpdate = async (values) => {
+    let toastId = toast.loading("Updating...");
+    let newAvatar = playerAvatar;
+
+    // Image Upload Logic (if a new file is selected)
+    if (file) {
+      try {
+        if (!checkFileType(file, "image-upload")) {
+          toast.error("Please select a JPG or PNG image!", { id: toastId });
+          return;
+        }
+
+        setSubmitting(true);
+
+        // Update the toast message dynamically as the upload progresses
+        newAvatar = await imageUpload(file, (percentCompleted) => {
+          toast.loading(`Uploading ${percentCompleted}%`, {
+            id: toastId,
+          });
+        });
+
+        if (!newAvatar) {
+          toast.error("Error uploading image", { id: toastId });
+          return;
+        }
+
+        setPlayerAvatar(newAvatar);
+      } catch (error) {
+        console.log(error);
+        toast.error("Error uploading image", { id: toastId });
+        return;
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
     try {
+      setSubmitting(true);
+
+      toast.loading(`Saving..`, {
+        id: toastId,
+      });
+
       const res = updateManagerPlayer(
         loginUser.token,
         initialValues._id,
         values
       );
 
-      toast.promise(res, {
-        loading: `Updating ...`,
-        success: (res) => {
-          setPlayer((prev) => ({ ...prev, ...values, avatar: playerAvatar }));
-          toggle();
-          return "Player Updated";
-        },
-        error: (e) => {
-          return e.response.data.msg;
-        },
-      });
+      setPlayer((prev) => ({ ...prev, ...values, avatar: newAvatar }));
+      toggle();
+
+      toast.success("Player Updated", { id: toastId });
     } catch (error) {
       console.log(error);
+      toast.error("Error creating player", { id: toastId });
+    } finally {
+      setSubmitting(true);
     }
   };
 
@@ -304,7 +348,11 @@ const BasicInfoForm = ({ initialValues, toggle, setPlayer }) => {
               </FormControl>
 
               <Flex align="center" justify="center" mt="1rem">
-                <Button type="submit" colorScheme="teal">
+                <Button
+                  type="submit"
+                  colorScheme="teal"
+                  isDisabled={submitting}
+                >
                   Save
                 </Button>
               </Flex>

@@ -13,6 +13,7 @@ const fieldsRoutes = require("./routes/fieldsRoutes");
 const refereeRoutes = require("./routes/refereeRoutes");
 const matchRoutes = require("./routes/matchRoutes");
 const reminderRoutes = require("./routes/reminderRoutes");
+const postRoutes = require("./routes/postRoutes");
 const reminderScheduler = require('./reminder/myReminder');
 const upload = require('./helper/uploadHelper');
 require('dotenv').config();
@@ -32,6 +33,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/upload', (req, res) => {
+    console.log(req.file);
+
     upload(req, res, (err) => {
         if (err) {
             res.status(400).json({ message: err });
@@ -58,6 +61,7 @@ app.use("/api/fields", fieldsRoutes);
 app.use("/api/referee", refereeRoutes);
 app.use("/api/match", matchRoutes);
 app.use("/api/reminder", reminderRoutes);
+app.use("/api/posts", postRoutes);
 
 // Deployment logic
 

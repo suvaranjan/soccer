@@ -239,6 +239,70 @@ const getBalance = async (req, res) => {
     }
 };
 
+const getUser = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        // const userId = req.body.userId;
+
+        // Find the user
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        let responseUser;
+
+        // Check if user is a player
+        if (user.role === "player") {
+            responseUser = await Player.findOne({ user: userId }).populate("user", "userName");
+        }
+        // Check if user is a team manager
+        else if (user.role === "team-manager") {
+            responseUser = await TeamManager.findOne({ user: userId }).populate("user", "userName");
+        }
+
+        else if (user.role === "referee") {
+            responseUser = await Referee.findOne({ user: userId }).populate("user", "userName");
+        }
+        // Handle other roles if necessary
+
+        // Send response
+        const { _id, userName } = responseUser.user;
+        let responseData = { _id, userName };
+
+        // Add additional fields based on role
+        if (user.role === "player") {
+
+            responseData.avatar = responseUser.avatar;
+            responseData.role = user.role;
+            responseData.userId = user._id;
+            responseData.playerId = responseUser._id
+
+        } else if (user.role === "team-manager") {
+
+            responseData.avatar = responseUser.avatar;
+            responseData.role = user.role;
+            responseData.userId = user._id;
+            responseData.playerId = responseUser._id
+
+        } else if (user.role === "referee") {
+
+            responseData.avatar = responseUser.avatar;
+            responseData.role = user.role;
+            responseData.userId = user._id;
+            responseData.playerId = responseUser._id
+
+        }
+        // Handle other roles if necessary
+
+        res.status(200).json(responseData);
+    } catch (error) {
+        console.error("getUserHeader Error:", error.message);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+};
+
 module.exports = {
-    getUserHeader, getUserProfile, profileUpdate, addCurrency, getBalance
+    getUserHeader, getUserProfile, profileUpdate, addCurrency, getBalance, getUser
 };

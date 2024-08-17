@@ -23,7 +23,7 @@ export default function NavLayout() {
         backgroundImage={bgImage}
         backgroundSize="cover"
         backgroundPosition="center"
-        pb="2rem"
+        pb="1px"
       >
         <Toaster
           toastOptions={{

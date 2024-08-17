@@ -24,65 +24,112 @@ import {
   updateUserProfile,
 } from "../../api/api";
 import useStore from "../../zustand/store";
+import { checkFileType } from "../../helper/fileCheck";
 
 export function FirstCardForm({ data, toggleFirstCard }) {
   const [userName, setUserName] = useState(data.userName || "");
   const [avatar, setAvatar] = useState(data.avatar || "");
-  const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const { loginUser } = useLoginUser();
   const { profileData, setProfileData, headerData, setHeaderData } = useStore(
     (state) => state
   );
+  const [file, setFile] = useState(null);
 
   const handleSave = async () => {
-    if (userName === data.userName && avatar === data.avatar) {
+    // Check if any changes were made
+    if (userName === data.userName && !file) {
       toggleFirstCard();
-      return toast.success("Saved");
+      console.log("No changes made");
+      return;
     }
 
-    if (userName == "" || avatar == "") {
-      return toast.error("Please fill required fields");
+    if (userName === "") {
+      toast.error("Please fill the required fields");
+      return;
     }
 
+    let toastId = toast.loading("Saving..."); // Initialize with a single loading toast
+    let newAvatar = avatar;
+
+    // Image Upload Logic (if a new file is selected)
+    if (file) {
+      try {
+        if (!checkFileType(file, "image-upload")) {
+          toast.error("Please select a JPG or PNG image!", { id: toastId });
+          return;
+        }
+
+        setSubmitting(true);
+
+        newAvatar = await imageUpload(file, (percentCompleted) => {
+          toast.loading(`Uploading ${percentCompleted}%`, {
+            id: toastId,
+          });
+        });
+
+        if (!newAvatar) {
+          toast.error("Error uploading image", { id: toastId });
+          return;
+        }
+
+        setAvatar(newAvatar);
+      } catch (error) {
+        toast.error("Error uploading image", { id: toastId });
+        return;
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    // Saving Updated Data with the latest avatar URL
     try {
-      const res = updateUserProfile(loginUser.token, {
-        userName,
-        avatar,
+      setSubmitting(true);
+
+      toast.loading(`Saving..`, {
+        id: toastId,
       });
 
-      toast.promise(res, {
-        loading: `Updating Profile...`,
-        success: (res) => {
-          const updatedProfile = {
-            ...profileData,
-            userName,
-            avatar,
-          };
-          const updatedHeader = {
-            ...headerData,
-            userName,
-            avatar,
-          };
-          setProfileData(updatedProfile);
-          setHeaderData(updatedHeader);
-          toggleFirstCard();
-          return "Profile Updated";
-        },
-        error: (e) => {
-          return e.response.data.msg;
-        },
+      await updateUserProfile(loginUser.token, {
+        userName,
+        avatar: newAvatar, // Use the updated avatar URL
       });
+
+      const updatedProfile = {
+        ...profileData,
+        userName,
+        avatar: newAvatar,
+      };
+
+      const updatedHeader = {
+        ...headerData,
+        userName,
+        avatar: newAvatar,
+      };
+
+      setProfileData(updatedProfile);
+      setHeaderData(updatedHeader);
+      toggleFirstCard();
+
+      toast.success("Profile Updated", { id: toastId });
     } catch (error) {
-      console.log(error);
+      toast.error("Error updating profile", { id: toastId });
+    } finally {
+      setSubmitting(true);
     }
   };
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    try {
-      await imageUpload(file, setAvatar, setUploading);
-    } catch (error) {
-      console.log(error);
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Show the selected image as a preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatar(reader.result);
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
     }
   };
 
@@ -117,7 +164,7 @@ export function FirstCardForm({ data, toggleFirstCard }) {
         mt={4}
         colorScheme="teal"
         onClick={handleSave}
-        isDisabled={uploading}
+        isDisabled={submitting}
       >
         Save
       </Button>

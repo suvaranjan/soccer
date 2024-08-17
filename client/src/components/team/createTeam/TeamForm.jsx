@@ -14,6 +14,7 @@ import { createTeam, getMyPlayers } from "../../../api/api";
 import useLoginUser from "../../../hooks/useLoginUser";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { checkFileType } from "../../../helper/fileCheck";
 
 function TeamForm() {
   const { loginUser } = useLoginUser();
@@ -25,7 +26,9 @@ function TeamForm() {
   const [fetchingPlayers, setFetchingPlayers] = useState(true);
   const [myPlayers, setMyPlayers] = useState([]);
   const [addingPlayer, setAddingPlayer] = useState(false);
+  const [file, setFile] = useState(null);
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchPlayers();
@@ -57,45 +60,133 @@ function TeamForm() {
     }
   };
 
+  // const handleFormSubmit = async (values) => {
+  //   if (!addedPlayers.length > 0) {
+  //     return toast.error("No Players Added");
+  //   }
+
+  //   const formData = {
+  //     ...values,
+  //     avatar: teamAvatar,
+  //     coachInfo: {
+  //       ...values.coach,
+  //       avatar: coachAvatar,
+  //     },
+  //     addedPlayers,
+  //     formation: selectedFormation,
+  //   };
+  //   // console.log(formData);
+  //   try {
+  //     const res = createTeam(loginUser.token, formData);
+  //     toast.promise(res, {
+  //       loading: `Creating Team..`,
+  //       success: (res) => {
+  //         navigate(`/team/${res.data.teamId}`);
+  //         return "Team Created";
+  //       },
+  //       error: (e) => {
+  //         return e.response.data.msg;
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const handleFileChange = async (event) => {
+  //   const file = event.target.files[0];
+  //   try {
+  //     await imageUpload(file, setTeamAvatar, setUploading);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleFormSubmit = async (values) => {
     if (!addedPlayers.length > 0) {
       return toast.error("No Players Added");
     }
 
-    const formData = {
-      ...values,
-      avatar: teamAvatar,
-      coachInfo: {
-        ...values.coach,
-        avatar: coachAvatar,
-      },
-      addedPlayers,
-      formation: selectedFormation,
-    };
-    // console.log(formData);
+    let toastId = toast.loading("Creating Team...");
+    let newAvatar = teamAvatar;
+
+    // Image Upload Logic (if a new file is selected)
+    if (file) {
+      try {
+        if (!checkFileType(file, "image-upload")) {
+          toast.error("Please select a JPG or PNG image!", { id: toastId });
+          return;
+        }
+
+        setSubmitting(true);
+
+        // Update the toast message dynamically as the upload progresses
+        newAvatar = await imageUpload(file, (percentCompleted) => {
+          toast.loading(`Uploading ${percentCompleted}%`, {
+            id: toastId,
+          });
+        });
+
+        if (!newAvatar) {
+          toast.error("Error uploading image", { id: toastId });
+          return;
+        }
+
+        setTeamAvatar(newAvatar);
+      } catch (error) {
+        console.log(error);
+        toast.error("Error uploading image", { id: toastId });
+        return;
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
     try {
-      const res = createTeam(loginUser.token, formData);
-      toast.promise(res, {
-        loading: `Creating Team..`,
-        success: (res) => {
-          navigate(`/team/${res.data.teamId}`);
-          return "Team Created";
-        },
-        error: (e) => {
-          return e.response.data.msg;
-        },
+      toast.loading(`Creating Team..`, {
+        id: toastId,
       });
+
+      const formData = {
+        ...values,
+        avatar: newAvatar,
+        coachInfo: {
+          ...values.coach,
+          avatar: coachAvatar,
+        },
+        addedPlayers,
+        formation: selectedFormation,
+      };
+
+      setSubmitting(true);
+
+      toast.loading(`Saving..`, {
+        id: toastId,
+      });
+
+      const res = await createTeam(loginUser.token, formData);
+
+      toast.success("Team Created", { id: toastId });
+      navigate(`/team/${res.data.teamId}`);
     } catch (error) {
       console.log(error);
+      toast.error("Error creating Team", { id: toastId });
+    } finally {
+      setSubmitting(true);
     }
   };
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    try {
-      await imageUpload(file, setTeamAvatar, setUploading);
-    } catch (error) {
-      console.log(error);
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Show the selected image as a preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setTeamAvatar(reader.result);
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
     }
   };
 

@@ -20,8 +20,8 @@ const validationSchema = Yup.object().shape({
         amount: Yup.string().required('Sponsorship amount is required'),
         period: Yup.object().shape({
             startDate: Yup.date()
-                .required('Start date is required')
-                .min(new Date(), 'Start date must be in the future'),
+                .required('Start date is required'),
+            // .min(new Date(), 'Start date must be in the future'),
             endDate: Yup.date()
                 .required('End date is required')
                 .min(Yup.ref('startDate'), 'End date must be after start date')

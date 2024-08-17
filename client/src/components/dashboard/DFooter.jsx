@@ -49,7 +49,7 @@ function DFooter() {
           <Image
             src={postsBtn}
             height="40px"
-            // onClick={() => navigate("/posts")}
+            onClick={() => navigate("/posts")}
           />
         </Box>
         <Box display="flex">

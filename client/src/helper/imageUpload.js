@@ -1,105 +1,66 @@
 import axios from 'axios';
-import toast from 'react-hot-toast';
-// const imageUploadUrl = "http://149.28.150.230:3000/upload";
-// const serverUrl = "http://149.28.150.230:3000";
 
-const imageUploadUrl = "https://api.cloudinary.com/v1_1/suvaranjan/image/upload";
+// For development (Cloudinary)
+const uploadUrl = "https://api.cloudinary.com/v1_1/suvaranjan/upload";
+
+// For deployment
+// const uploadUrl = import.meta.env.VITE_UPLOAD_URL;
 // const serverUrl = import.meta.env.VITE_SERVER_URL;
 
-export const imageUpload = async (file, setImage, setUpload) => {
-    if (!file) {
-        toast.error("Please Select an Image!");
-        return;
-    }
-
-    if (
-        file.type !== "image/jpeg" &&
-        file.type !== "image/png" &&
-        file.type !== "image/jpg"
-    ) {
-        toast.error("Please Select a JPG or PNG Image!");
-        return;
-    }
-
+// For Development - Image/Vedio Upload (local server)
+export const imageUpload = async (file, setProgress) => {
     try {
-        setUpload(true)
         const data = new FormData();
         data.append("file", file);
         data.append("upload_preset", "chat-app");
         data.append("cloud_name", "suvaranjan");
 
-        const res = axios.post(
-            imageUploadUrl,
-            data
-        );
-
-        toast.promise(res, {
-            loading: `Uploading..`,
-            success: (res) => {
-                setImage(res.data.url.toString())
-                console.log("Image Uploaded", res.data.url.toString());
-                return "Image Uploaded";
-            },
-            error: (e) => {
-                console.error(e);
-                return "An error occurred";
+        const res = await axios.post(uploadUrl, data, {
+            onUploadProgress: (progressEvent) => {
+                const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setProgress(percentCompleted); // Update the progress state
             },
         });
+
+        const uploadedUrl = res.data.url.toString();
+
+        console.log(uploadedUrl);
+
+        return uploadedUrl;
+
     } catch (error) {
         console.log(error);
-        toast.error("Error uploading image");
-    } finally {
-        setUpload(false);
+        return null;
     }
 };
 
-// export const imageUpload = async (file, setImage, setUpload) => {
-//     if (!file) {
-//         toast.error("Please Select an Image!");
-//         return;
-//     }
 
-//     if (
-//         file.type !== "image/jpeg" &&
-//         file.type !== "image/png" &&
-//         file.type !== "image/jpg"
-//     ) {
-//         toast.error("Please Select a JPG or PNG Image!");
-//         return;
-//     }
+
+// For deployments - Image/Video upload logic (remote server)
+
+// export const imageUpload = async (file, setProgress) => {
 
 //     try {
-//         setUpload(true);
 //         const data = new FormData();
-//         data.append("image", file);
+//         data.append("file", file);
 
-//         const res = axios.post(
-//             imageUploadUrl,
-//             data,
-//             {
-//                 headers: {
-//                     'Content-Type': 'multipart/form-data'
-//                 }
-//             }
-//         );
-
-//         toast.promise(res, {
-//             loading: `Uploading..`,
-//             success: (res) => {
-//                 // setImage(res.data.file);
-//                 setImage(`${serverUrl}/${res.data.file}`);
-//                 console.log("Image Uploaded", res.data.file);
-//                 return "Image Uploaded";
+//         const res = await axios.post(uploadUrl, data, {
+//             headers: {
+//                 'Content-Type': 'multipart/form-data',
 //             },
-//             error: (e) => {
-//                 console.error(e);
-//                 return "An error occurred";
+//             onUploadProgress: (progressEvent) => {
+//                 // Calculate progress percentage
+//                 const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+//                 setProgress(percentCompleted); // Update the progress state
 //             },
 //         });
+
+//         console.log("Image Uploaded", res.data.file);
+//         return `${serverUrl}/${res.data.file}`; // Adjust this based on your server response
+
 //     } catch (error) {
-//         console.log(error);
-//         toast.error("Error uploading image");
-//     } finally {
-//         setUpload(false);
+//         console.error("Error uploading image:", error);
+//         return null; // Return null or handle the error as needed
 //     }
 // };
+

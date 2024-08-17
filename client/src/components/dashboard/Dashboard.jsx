@@ -26,9 +26,6 @@ function Dashboard() {
     if (!loginUser) {
       navigate("/login");
     }
-    // else {
-    //   console.log(loginUser.token);
-    // }
   }, []);
 
   useEffect(() => {

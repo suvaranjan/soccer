@@ -122,18 +122,18 @@ const addPlayer = async (req, res) => {
         await newPlayer.save();
 
         // Assign player to manager's default team if exists
-        if (teamManager.defaultTeam) {
-            newPlayer.team = teamManager.defaultTeam;
+        // if (teamManager.defaultTeam) {
+        //     newPlayer.team = teamManager.defaultTeam;
 
-            // Save the updated player with team assignment
-            await newPlayer.save();
+        //     // Save the updated player with team assignment
+        //     await newPlayer.save();
 
-            // Add player's ID to the default team's players array
-            await Team.findByIdAndUpdate(
-                teamManager.defaultTeam,
-                { $push: { players: newPlayer._id } }
-            );
-        }
+        //     // Add player's ID to the default team's players array
+        //     await Team.findByIdAndUpdate(
+        //         teamManager.defaultTeam,
+        //         { $push: { players: newPlayer._id } }
+        //     );
+        // }
 
         // Add the new player's ID to the team manager's players array
         teamManager.players.push(newPlayer._id);
