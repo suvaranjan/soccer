@@ -103,7 +103,12 @@ const MediaSlider = ({ mediaItems, onRemove }) => {
   );
 };
 
-export default function CreatePostModal({ isOpen, onClose, user }) {
+export default function CreatePostModal({
+  isOpen,
+  onClose,
+  user,
+  onPostCreated,
+}) {
   const initialValues = {
     content: "",
     media: [],
@@ -149,10 +154,13 @@ export default function CreatePostModal({ isOpen, onClose, user }) {
       try {
         toast.loading("Creating Post ..", { id: toastId });
         await createPost(loginUser.token, postData);
+
         toast.success("Post created !!", { id: toastId });
       } catch (error) {
         console.log(error);
         toast.error("Error creating post", { id: toastId });
+      } finally {
+        if (onPostCreated) onPostCreated();
       }
 
       onClose();

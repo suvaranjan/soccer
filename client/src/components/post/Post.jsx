@@ -190,6 +190,12 @@ const Post = () => {
     onShareOpen();
   };
 
+  const onPostCreated = () => {
+    setPage(1);
+    setPosts([]);
+    fetchPosts(1);
+  };
+
   return (
     <Box>
       <Header heading="Posts" />
@@ -274,6 +280,7 @@ const Post = () => {
           onOpen={onCreatePostOpen}
           onClose={onCreatePostClose}
           user={user}
+          onPostCreated={onPostCreated}
         />
       )}
       {!postsLoading && (
